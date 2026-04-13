@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora del Proyecto</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <h1 class="logo">Calculadora del Proyecto</h1>
+        <button id="themeToggle" class="btn-secondary">Modo oscuro</button>
+    </header>
+
+    <main class="container">
+
+        <section class="card">
+            <h2>Descripción</h2>
+            <p>
+                Esta página contiene la interfaz principal del proyecto.
+                La calculadora funciona mediante un archivo JavaScript externo que se añadirá aparte.
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>Zona de la Calculadora</h2>
+            <p>
+                Aquí aparecerán los campos y resultados generados por el archivo de la calculadora.
+            </p>
+
+            <!-- Aquí se insertará la calculadora desde tu otro JS -->
+            <div id="calculadora"></div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>Proyecto académico · Sistemas · 2026</p>
+    </footer>
+
+    <!-- Interactividad general de la página -->
+    <script src="interactividad.js"></script>
+
+    <!-- Aquí enlazarás tu calculadora real -->
+    <!-- <script src="calculadora.js"></script> -->
+
+</body>
+</html>
