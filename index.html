@@ -17,6 +17,7 @@
             <button class="tab-btn active" onclick="switchTab('calculator')">📈 Calculadora</button>
             <button class="tab-btn" onclick="switchTab('strategies')">💡 Estratègies</button>
             <button class="tab-btn" onclick="switchTab('forecast')">🔮 Predicció</button>
+            <button class="tab-btn" onclick="switchTab('planning')">📅 Pla Mensual</button>
             <button class="tab-btn" onclick="switchTab('actionplan')">🎯 Pla 3 Anys</button>
         </nav>
 
@@ -28,12 +29,23 @@
 
                     <div class="input-group">
                         <label for="consumptionType">Tipus de consum:</label>
-                        <select id="consumptionType">
+                        <select id="consumptionType" onchange="updateStrategiesSelect()">
+                            <option value="">-- Selecciona un tipus --</option>
                             <option value="electricity">⚡ Electricitat (kWh)</option>
                             <option value="water">💧 Aigua (m³)</option>
                             <option value="officeSupplies">📎 Consumibles d'oficina (kg)</option>
                             <option value="cleaningProducts">🧹 Productes de neteja (litres)</option>
                         </select>
+                    </div>
+
+                    <div id="strategiesContainer" style="display: none;">
+                        <div class="input-group">
+                            <label for="appliedStrategy">Estratègia aplicada:</label>
+                            <select id="appliedStrategy" onchange="displayStrategyInfo()">
+                                <option value="">-- Cap estratègia --</option>
+                            </select>
+                        </div>
+                        <div class="strategy-info" id="strategyInfo"></div>
                     </div>
 
                     <div class="input-group">
@@ -91,6 +103,7 @@
                                     <tr>
                                         <th>Data</th>
                                         <th>Valor</th>
+                                        <th>Estratègia</th>
                                         <th>Acció</th>
                                     </tr>
                                 </thead>
@@ -105,6 +118,7 @@
                                     <tr>
                                         <th>Data</th>
                                         <th>Valor</th>
+                                        <th>Estratègia</th>
                                         <th>Acció</th>
                                     </tr>
                                 </thead>
@@ -119,6 +133,7 @@
                                     <tr>
                                         <th>Data</th>
                                         <th>Valor</th>
+                                        <th>Estratègia</th>
                                         <th>Acció</th>
                                     </tr>
                                 </thead>
@@ -133,6 +148,7 @@
                                     <tr>
                                         <th>Data</th>
                                         <th>Valor</th>
+                                        <th>Estratègia</th>
                                         <th>Acció</th>
                                     </tr>
                                 </thead>
@@ -312,7 +328,7 @@
             <div id="forecast" class="tab-content">
                 <section class="forecast-section">
                     <h2>🔮 Predicció Estacional de Consum</h2>
-                    <p class="intro-text">Predicció basada en cicles estacionals per a cada mes de l'any.</p>
+                    <p class="intro-text">Predicció basada en cicles estacionals per a cada mes de l'any. Les prediccions varien per any segons la implementació d'estratègies.</p>
 
                     <div class="forecast-controls">
                         <label for="forecastYear">Any:</label>
@@ -322,6 +338,8 @@
                             <option value="2028">2028</option>
                         </select>
                     </div>
+
+                    <div class="forecast-info" id="forecastInfo"></div>
 
                     <div class="forecast-grid">
                         <div class="forecast-card">
@@ -363,496 +381,57 @@
                 </section>
             </div>
 
-            <!-- TAB 4: PLA 3 ANYS -->
+            <!-- TAB 4: PLA MENSUAL -->
+            <div id="planning" class="tab-content">
+                <section class="planning-section">
+                    <h2>📅 Pla Mensual d'Estratègies</h2>
+                    <p class="intro-text">Planifica quines estratègies implementaràs cada mes per a cada tipus de consum. Els impactes es reflectiran automàticament a les prediccions.</p>
+
+                    <div class="planning-controls">
+                        <label for="planningYear">Any de planificació:</label>
+                        <select id="planningYear" onchange="updatePlanningDisplay()">
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                        </select>
+                    </div>
+
+                    <div class="planning-grid">
+                        <div class="planning-card">
+                            <h3>⚡ Electricitat</h3>
+                            <div id="electricityPlanning"></div>
+                        </div>
+
+                        <div class="planning-card">
+                            <h3>💧 Aigua</h3>
+                            <div id="waterPlanning"></div>
+                        </div>
+
+                        <div class="planning-card">
+                            <h3>📎 Consumibles</h3>
+                            <div id="suppliesPlanning"></div>
+                        </div>
+
+                        <div class="planning-card">
+                            <h3>🧹 Neteja</h3>
+                            <div id="cleaningPlanning"></div>
+                        </div>
+                    </div>
+
+                    <div class="planning-summary">
+                        <h3>📊 Resum de l'Impacte Planificat</h3>
+                        <div id="planningSummary"></div>
+                        <button class="btn btn-success" onclick="savePlanningAndUpdateForecast()">💾 Guardar Pla i Actualitzar Prediccions</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- TAB 5: PLA 3 ANYS -->
             <div id="actionplan" class="tab-content">
                 <section class="actionplan-section">
                     <h2>🎯 Pla d'Accions a 3 Anys - Reducció 30%</h2>
-
-                    <!-- TIMELINE -->
-                    <div class="timeline-container">
-                        <div class="timeline-header">
-                            <h3>⏱️ Cronograma a 3 Anys</h3>
-                        </div>
-
-                        <div class="timeline">
-                            <div class="timeline-phase phase-1-timeline">
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <h4>ANY 1: IMPLEMENTACIÓ BÀSICA</h4>
-                                    <p class="timeline-reduction">-10% impacte</p>
-                                    <div class="timeline-actions">
-                                        <div class="action-tag elec-tag">⚡ LED + Sensors</div>
-                                        <div class="action-tag water-tag">💧 Grifos sensor</div>
-                                        <div class="action-tag supplies-tag">📎 Paperless</div>
-                                        <div class="action-tag cleaning-tag">🧹 Ecològics</div>
-                                    </div>
-                                    <p class="timeline-investment">Inversió: 8.800€</p>
-                                </div>
-                            </div>
-
-                            <div class="timeline-phase phase-2-timeline">
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <h4>ANY 2: EXPANSIÓ TECNOLÒGICA</h4>
-                                    <p class="timeline-reduction">-25% impacte</p>
-                                    <div class="timeline-actions">
-                                        <div class="action-tag elec-tag">☀️ Panells solars</div>
-                                        <div class="action-tag water-tag">🚰 Doble flux</div>
-                                        <div class="action-tag supplies-tag">♻️ Paper reciclat</div>
-                                        <div class="action-tag cleaning-tag">🧼 Naturals</div>
-                                    </div>
-                                    <p class="timeline-investment">Inversió: 22.300€</p>
-                                </div>
-                            </div>
-
-                            <div class="timeline-phase phase-3-timeline">
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <h4>ANY 3: OPTIMITZACIÓ COMPLETA</h4>
-                                    <p class="timeline-reduction">-30% impacte</p>
-                                    <div class="timeline-actions">
-                                        <div class="action-tag elec-tag">🔋 Bateria</div>
-                                        <div class="action-tag water-tag">💦 Grises</div>
-                                        <div class="action-tag supplies-tag">📄 Zero paper</div>
-                                        <div class="action-tag cleaning-tag">🌿 Avançat</div>
-                                    </div>
-                                    <p class="timeline-investment">Inversió: 38.900€</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="timeline-total">
-                            <p><strong>Inversió Total: 61.600€</strong> | <strong>Estalvi: 20.650€</strong> | <strong>ROI: 3 anys</strong></p>
-                        </div>
-                    </div>
-
-                    <!-- MATRIU ACCIONS -->
-                    <div class="actions-matrix">
-                        <h3>🎬 Matriu d'Accions Concretes</h3>
-
-                        <!-- ELECTRICITAT -->
-                        <div class="resource-matrix electricity-matrix">
-                            <div class="matrix-header electricity-header">
-                                <h4>⚡ ELECTRICITAT</h4>
-                                <span class="reduction-badge">30% ↓</span>
-                            </div>
-
-                            <div class="actions-grid">
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 1</div>
-                                    <h5>🔦 LED Lighting</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 80% reducció</p>
-                                        <p><strong>Indicador:</strong> kWh iluminació/mes</p>
-                                        <p><strong>Cost:</strong> 2.500€ → 800€/any</p>
-                                        <p class="circular">♻️ Reciclar bombetes velles</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 1</div>
-                                    <h5>🚨 Sensors</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 15% reducció</p>
-                                        <p><strong>Indicador:</strong> Activacions/mes</p>
-                                        <p><strong>Cost:</strong> 1.200€ → 450€/any</p>
-                                        <p class="circular">♻️ Reutilitzar sensors</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 2</div>
-                                    <h5>☀️ Panells Solars</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 30% energia renovable</p>
-                                        <p><strong>Indicador:</strong> kWh generats/mes</p>
-                                        <p><strong>Cost:</strong> 15.000€ → 2.500€/any</p>
-                                        <p class="circular">♻️ Materials reciclats</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 3</div>
-                                    <h5>🔋 Bateria</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 60% autosuficiència</p>
-                                        <p><strong>Indicador:</strong> % emmagatzemada</p>
-                                        <p><strong>Cost:</strong> 12.000€ → 2.000€/any</p>
-                                        <p class="circular">♻️ Reciclables</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="matrix-result">
-                                <span>1500 kWh/mes</span>
-                                <span class="arrow">→</span>
-                                <span class="final">1050 kWh/mes (-30%)</span>
-                            </div>
-                        </div>
-
-                        <!-- AIGUA -->
-                        <div class="resource-matrix water-matrix">
-                            <div class="matrix-header water-header">
-                                <h4>💧 AIGUA</h4>
-                                <span class="reduction-badge">58% ↓</span>
-                            </div>
-
-                            <div class="actions-grid">
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 1</div>
-                                    <h5>🚰 Grifos Sensor</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 35% reducció</p>
-                                        <p><strong>Indicador:</strong> L per ús</p>
-                                        <p><strong>Cost:</strong> 1.500€ → 300€/any</p>
-                                        <p class="circular">♻️ Grifos a ONG's</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 2</div>
-                                    <h5>🚽 Doble Flux</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 20% reducció</p>
-                                        <p><strong>Indicador:</strong> L per descàrrega</p>
-                                        <p><strong>Cost:</strong> 3.000€ → 500€/any</p>
-                                        <p class="circular">♻️ Inodors remodelació</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 2</div>
-                                    <h5>🌧️ Recollida Pluja</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 50% jardins</p>
-                                        <p><strong>Indicador:</strong> L recollits/mes</p>
-                                        <p><strong>Cost:</strong> 2.500€ → 600€/any</p>
-                                        <p class="circular">♻️ Tanc reciclat</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 3</div>
-                                    <h5>💦 Grises</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 30% addicional</p>
-                                        <p><strong>Indicador:</strong> % reutilitzada</p>
-                                        <p><strong>Cost:</strong> 8.000€ → 900€/any</p>
-                                        <p class="circular">♻️ Natural</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="matrix-result">
-                                <span>50 m³/mes</span>
-                                <span class="arrow">→</span>
-                                <span class="final">21 m³/mes (-58%)</span>
-                            </div>
-                        </div>
-
-                        <!-- CONSUMIBLES -->
-                        <div class="resource-matrix supplies-matrix">
-                            <div class="matrix-header supplies-header">
-                                <h4>📎 CONSUMIBLES</h4>
-                                <span class="reduction-badge">70% ↓</span>
-                            </div>
-
-                            <div class="actions-grid">
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 1</div>
-                                    <h5>📱 Paperless</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 40% reducció</p>
-                                        <p><strong>Indicador:</strong> kg/mes</p>
-                                        <p><strong>Cost:</strong> 1.000€ → 300€/any</p>
-                                        <p class="circular">♻️ Paper reciclatge</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 2</div>
-                                    <h5>♻️ Paper Reciclat</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 50% impacte menor</p>
-                                        <p><strong>Indicador:</strong> % reciclat</p>
-                                        <p><strong>Cost:</strong> 200€ → 150€/any</p>
-                                        <p class="circular">♻️ Cicle tancat</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 2</div>
-                                    <h5>🖨️ Tòners</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 40% costos</p>
-                                        <p><strong>Indicador:</strong> Cartutxos reutilitzats</p>
-                                        <p><strong>Cost:</strong> 600€ → 800€/any</p>
-                                        <p class="circular">♻️ 10+ refills</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 3</div>
-                                    <h5>📋 Zero Paper</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 70% reducció</p>
-                                        <p><strong>Indicador:</strong> kg/mes</p>
-                                        <p><strong>Cost:</strong> 500€ → 600€/any</p>
-                                        <p class="circular">♻️ Compostatge</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="matrix-result">
-                                <span>180 kg/mes</span>
-                                <span class="arrow">→</span>
-                                <span class="final">54 kg/mes (-70%)</span>
-                            </div>
-                        </div>
-
-                        <!-- NETEJA -->
-                        <div class="resource-matrix cleaning-matrix">
-                            <div class="matrix-header cleaning-header">
-                                <h4>🧹 NETEJA</h4>
-                                <span class="reduction-badge">75% ↓</span>
-                            </div>
-
-                            <div class="actions-grid">
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 1</div>
-                                    <h5>🌿 Ecològics</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 30% reducció</p>
-                                        <p><strong>Indicador:</strong> L/mes</p>
-                                        <p><strong>Cost:</strong> 600€ → 400€/any</p>
-                                        <p class="circular">♻️ 100% reciclables</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 1</div>
-                                    <h5>🧵 Microfiber</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 50% paper</p>
-                                        <p><strong>Indicador:</strong> paper/mes</p>
-                                        <p><strong>Cost:</strong> 800€ → 600€/any</p>
-                                        <p class="circular">♻️ 500 usos/roda</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 2</div>
-                                    <h5>🍋 Naturals</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 60% química</p>
-                                        <p><strong>Indicador:</strong> L químics/mes</p>
-                                        <p><strong>Cost:</strong> 200€ → 800€/any</p>
-                                        <p class="circular">♻️ Zero empaques</p>
-                                    </div>
-                                </div>
-
-                                <div class="action-card">
-                                    <div class="action-phase">ANY 3</div>
-                                    <h5>🌿 Avançat</h5>
-                                    <div class="action-detail">
-                                        <p><strong>Objectiu:</strong> 75% reducció</p>
-                                        <p><strong>Indicador:</strong> L/mes</p>
-                                        <p><strong>Cost:</strong> 400€ → 1.200€/any</p>
-                                        <p class="circular">♻️ 1000 usos</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="matrix-result">
-                                <span>32 L/mes</span>
-                                <span class="arrow">→</span>
-                                <span class="final">8 L/mes (-75%)</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ECONOMIA CIRCULAR -->
-                    <div class="circular-visual">
-                        <h3>♻️ Economia Circular - Cicle Complet</h3>
-                        <div class="circular-diagram">
-                            <div class="circular-step">
-                                <div class="step-icon">🛍️</div>
-                                <h5>Consum Responsable</h5>
-                                <p>Productes duradables</p>
-                            </div>
-                            <div class="circular-arrow">→</div>
-                            <div class="circular-step">
-                                <div class="step-icon">⚙️</div>
-                                <h5>Ús Eficient</h5>
-                                <p>Manteniment + reparació</p>
-                            </div>
-                            <div class="circular-arrow">→</div>
-                            <div class="circular-step">
-                                <div class="step-icon">🔄</div>
-                                <h5>Reutilització</h5>
-                                <p>Segon ús o vida</p>
-                            </div>
-                            <div class="circular-arrow">→</div>
-                            <div class="circular-step">
-                                <div class="step-icon">♻️</div>
-                                <h5>Reciclatge</h5>
-                                <p>Retorn al cicle</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- KPI -->
-                    <div class="kpi-visual">
-                        <h3>📊 Indicadors Clau (KPI's)</h3>
-                        <div class="kpi-cards">
-                            <div class="kpi-card kpi-elec">
-                                <div class="kpi-icon">⚡</div>
-                                <h5>Electricitat</h5>
-                                <div class="kpi-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 70%;"></div>
-                                    </div>
-                                </div>
-                                <p class="kpi-text">1500 → 1050 kWh/mes</p>
-                                <p class="kpi-goal">-30%</p>
-                            </div>
-
-                            <div class="kpi-card kpi-water">
-                                <div class="kpi-icon">💧</div>
-                                <h5>Aigua</h5>
-                                <div class="kpi-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 42%;"></div>
-                                    </div>
-                                </div>
-                                <p class="kpi-text">50 → 21 m³/mes</p>
-                                <p class="kpi-goal">-58%</p>
-                            </div>
-
-                            <div class="kpi-card kpi-supplies">
-                                <div class="kpi-icon">📎</div>
-                                <h5>Consumibles</h5>
-                                <div class="kpi-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 30%;"></div>
-                                    </div>
-                                </div>
-                                <p class="kpi-text">180 → 54 kg/mes</p>
-                                <p class="kpi-goal">-70%</p>
-                            </div>
-
-                            <div class="kpi-card kpi-cleaning">
-                                <div class="kpi-icon">🧹</div>
-                                <h5>Neteja</h5>
-                                <div class="kpi-progress">
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 25%;"></div>
-                                    </div>
-                                </div>
-                                <p class="kpi-text">32 → 8 L/mes</p>
-                                <p class="kpi-goal">-75%</p>
-                            </div>
-
-                            <div class="kpi-card kpi-investment">
-                                <div class="kpi-icon">💼</div>
-                                <h5>Inversió</h5>
-                                <div class="kpi-big">61.600€</div>
-                                <p class="kpi-text">3 anys</p>
-                            </div>
-
-                            <div class="kpi-card kpi-savings">
-                                <div class="kpi-icon">💰</div>
-                                <h5>Estalvi</h5>
-                                <div class="kpi-big">20.650€</div>
-                                <p class="kpi-text">ROI: 3 anys</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- CALCULADORA VISUAL -->
-                    <div class="calculator-visual">
-                        <h3>🔢 Recalcula amb les Teves Dades</h3>
-                        <p>Introduïx els teus valors actuals i veu l'impacte de les millores</p>
-
-                        <div class="calc-inputs-visual">
-                            <div class="input-card input-elec">
-                                <div class="input-icon">⚡</div>
-                                <label>Electricitat (kWh/mes)</label>
-                                <input type="number" id="recalcElecVisual" value="1500" min="0" onchange="recalculateVisual()">
-                                <div class="input-result">
-                                    <p class="result-value" id="resultElecVisual">1050</p>
-                                    <p class="result-label">kWh (-30%)</p>
-                                </div>
-                            </div>
-
-                            <div class="input-card input-water">
-                                <div class="input-icon">💧</div>
-                                <label>Aigua (m³/mes)</label>
-                                <input type="number" id="recalcWaterVisual" value="50" min="0" onchange="recalculateVisual()">
-                                <div class="input-result">
-                                    <p class="result-value" id="resultWaterVisual">21</p>
-                                    <p class="result-label">m³ (-58%)</p>
-                                </div>
-                            </div>
-
-                            <div class="input-card input-supplies">
-                                <div class="input-icon">📎</div>
-                                <label>Consumibles (kg/mes)</label>
-                                <input type="number" id="recalcSuppliesVisual" value="180" min="0" onchange="recalculateVisual()">
-                                <div class="input-result">
-                                    <p class="result-value" id="resultSuppliesVisual">54</p>
-                                    <p class="result-label">kg (-70%)</p>
-                                </div>
-                            </div>
-
-                            <div class="input-card input-cleaning">
-                                <div class="input-icon">🧹</div>
-                                <label>Neteja (L/mes)</label>
-                                <input type="number" id="recalcCleaningVisual" value="32" min="0" onchange="recalculateVisual()">
-                                <div class="input-result">
-                                    <p class="result-value" id="resultCleaningVisual">8</p>
-                                    <p class="result-label">L (-75%)</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="calc-results-visual" id="calcResultsVisual" style="display: none;">
-                            <h4>💡 Els Teus Resultats Personalitzats</h4>
-                            <div class="results-cards">
-                                <div class="result-card result-elec">
-                                    <h5>⚡ Electricitat</h5>
-                                    <p>Estalvi mensual: <strong id="savingElecMonthVisual">450</strong> kWh</p>
-                                    <p>Estalvi anual: <strong id="savingElecYearVisual">5.400</strong> kWh</p>
-                                    <p>💰 <strong id="costElecVisual">810€</strong></p>
-                                </div>
-
-                                <div class="result-card result-water">
-                                    <h5>💧 Aigua</h5>
-                                    <p>Estalvi mensual: <strong id="savingWaterMonthVisual">29</strong> m³</p>
-                                    <p>Estalvi anual: <strong id="savingWaterYearVisual">348</strong> m³</p>
-                                    <p>💰 <strong id="costWaterVisual">696€</strong></p>
-                                </div>
-
-                                <div class="result-card result-supplies">
-                                    <h5>📎 Consumibles</h5>
-                                    <p>Estalvi mensual: <strong id="savingSuppliesMonthVisual">126</strong> kg</p>
-                                    <p>Estalvi anual: <strong id="savingSuppliesYearVisual">1.512</strong> kg</p>
-                                    <p>💰 <strong id="costSuppliesVisual">756€</strong></p>
-                                </div>
-
-                                <div class="result-card result-cleaning">
-                                    <h5>🧹 Neteja</h5>
-                                    <p>Estalvi mensual: <strong id="savingCleaningMonthVisual">24</strong> L</p>
-                                    <p>Estalvi anual: <strong id="savingCleaningYearVisual">288</strong> L</p>
-                                    <p>💰 <strong id="costCleaningVisual">2.304€</strong></p>
-                                </div>
-                            </div>
-
-                            <div class="total-savings">
-                                <h3>ESTALVI TOTAL ANUAL: <strong id="totalCostVisual">4.566€</strong></h3>
-                            </div>
-                        </div>
-                    </div>
+                    <p class="intro-text">Pla detallat per reduir un 30% l'impacte ambiental en 3 anys amb accions concretes i measurables.</p>
+                    <p style="text-align: center; color: #667eea; font-weight: 600;">👉 Aplica les estratègies al tab "Calculadora" per veure el teu impacte personalitzat</p>
                 </section>
             </div>
         </div>
@@ -864,6 +443,16 @@
                 <h2 id="resultTitle"></h2>
                 <div id="resultBody"></div>
                 <button class="btn btn-primary" onclick="closeModal()">Tancar</button>
+            </div>
+        </div>
+
+        <!-- MODAL ESTRATÈGIA -->
+        <div id="strategyModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeStrategyModal()">&times;</span>
+                <h2 id="strategyModalTitle"></h2>
+                <div id="strategyModalBody"></div>
+                <button class="btn btn-primary" onclick="closeStrategyModal()">Tancar</button>
             </div>
         </div>
     </div>
