@@ -16,8 +16,8 @@
         <nav class="tabs">
             <button class="tab-btn active" onclick="switchTab('calculator')">📈 Calculadora</button>
             <button class="tab-btn" onclick="switchTab('strategies')">💡 Estratègies</button>
-            <button class="tab-btn" onclick="switchTab('forecast')">🔮 Predicció</button>
             <button class="tab-btn" onclick="switchTab('planning')">📅 Pla Mensual</button>
+            <button class="tab-btn" onclick="switchTab('forecast')">🔮 Predicció</button>
             <button class="tab-btn" onclick="switchTab('actionplan')">🎯 Pla 3 Anys</button>
         </nav>
 
@@ -34,7 +34,7 @@
                             <option value="electricity">⚡ Electricitat (kWh)</option>
                             <option value="water">💧 Aigua (m³)</option>
                             <option value="officeSupplies">📎 Consumibles d'oficina (kg)</option>
-                            <option value="cleaningProducts">🧹 Productes de neteja (litres)</option>
+                            <option value="cleaningProducts">🧹 Productes de neteja (€/mes)</option>
                         </select>
                     </div>
 
@@ -142,7 +142,7 @@
                         </div>
 
                         <div class="data-table">
-                            <h3>🧹 Neteja (litres)</h3>
+                            <h3>🧹 Neteja (€/mes)</h3>
                             <table>
                                 <thead>
                                     <tr>
@@ -167,17 +167,65 @@
                     <h2>💡 Estratègies de Reducció de Consum</h2>
                     <p class="intro-text">Aplicant tendències estacionals i optimitzacions, aquí tenim les millors estratègies per reduir el consum.</p>
 
+                    <!-- TAULA RESUM GLOBAL - ADALT DE TOT -->
+                    <div class="summary-card">
+                        <h3>📊 Resum Global de Potencial d'Estalvi - Dades ITB 2024-2025</h3>
+                        <table class="summary-table">
+                            <tr>
+                                <th>Recurs</th>
+                                <th>Consum Actual</th>
+                                <th>Potencial</th>
+                                <th>Optimitzat</th>
+                                <th>Estalvi/any</th>
+                            </tr>
+                            <tr>
+                                <td>Electricitat (Import)</td>
+                                <td>419.79 kWh/mes</td>
+                                <td>30%</td>
+                                <td>293.85 kWh/mes</td>
+                                <td>552.36€</td>
+                            </tr>
+                            <tr>
+                                <td>Aigua</td>
+                                <td>110 m³/any (9.17 m³/mes)</td>
+                                <td>40%</td>
+                                <td>6.6 m³/mes</td>
+                                <td>238.02€</td>
+                            </tr>
+                            <tr>
+                                <td>Consumibles</td>
+                                <td>10 paquets A4/mes</td>
+                                <td>50%</td>
+                                <td>5 paquets/mes</td>
+                                <td>75.00€</td>
+                            </tr>
+                            <tr>
+                                <td>Neteja (Productes + Serveis)</td>
+                                <td>996€/mes (11,952€/any)</td>
+                                <td>35%</td>
+                                <td>647.4€/mes</td>
+                                <td>4,183.20€</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td><strong>TOTAL ANUAL ESTIMAT</strong></td>
+                                <td colspan="3"></td>
+                                <td><strong>5,048.58€</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
                     <div class="strategy-card electricity-strategy">
                         <div class="strategy-header">
                             <h3>⚡ Electricitat</h3>
                             <span class="potential-saving">Estalvi potencial: 20-30%</span>
                         </div>
                         <div class="strategy-content">
-                            <h4>🌡️ Tendències Temporals:</h4>
+                            <h4>🌡️ Situació ITB:</h4>
                             <ul>
-                                <li><strong>Hivern (Des-Feb):</strong> Consum alt per calefacció (+40%).</li>
-                                <li><strong>Estiu (Jun-Ago):</strong> Pic de climatització (+35%).</li>
-                                <li><strong>Primavera/Tardor:</strong> Consum moderat.</li>
+                                <li><strong>Generació solar actual:</strong> 1419.86 kWh (Gener 2025)</li>
+                                <li><strong>Import energia necessari:</strong> 419.79 kWh (30% del total)</li>
+                                <li><strong>Autoconsum fotovoltaic:</strong> 94.2%</li>
+                                <li><strong>CO2 evitat:</strong> 0.69 tones (Gener 2025)</li>
                             </ul>
 
                             <h4>💡 Accions Immediates:</h4>
@@ -186,11 +234,11 @@
                                 <li>Instal·lar sensors de moviment als passadissos</li>
                                 <li>Fer manteniment mensual d'aires acondicionats</li>
                                 <li>Apagar equips en repòs - estalvi 10-15%</li>
-                                <li>Instal·lar panells solars (estalvi 50-70%)</li>
+                                <li>Optimitzar ús de panells solars existents</li>
                             </ul>
 
                             <div class="impact-box">
-                                <strong>💰 Impacte estimat:</strong> De 1500 kWh/mes → 1050 kWh/mes (30% reducció)
+                                <strong>💰 Impacte estimat:</strong> De 419.79 kWh/mes → 293.85 kWh/mes (30% reducció)
                             </div>
                         </div>
                     </div>
@@ -201,10 +249,12 @@
                             <span class="potential-saving">Estalvi potencial: 25-40%</span>
                         </div>
                         <div class="strategy-content">
-                            <h4>🌊 Cicles Estacionals:</h4>
+                            <h4>🌊 Situació ITB:</h4>
                             <ul>
-                                <li><strong>Estiu:</strong> Pic de consum (+45%) per regadiu.</li>
-                                <li><strong>Hivern:</strong> Consum baix (-20%).</li>
+                                <li><strong>Consum anual:</strong> 110 m³</li>
+                                <li><strong>Per càpita:</strong> 0.1 m³/persona (molt eficient)</li>
+                                <li><strong>Cost total (2024):</strong> 597.54€</li>
+                                <li><strong>Preu/m³:</strong> 5.43€</li>
                             </ul>
 
                             <h4>🚰 Accions Immediates:</h4>
@@ -213,11 +263,11 @@
                                 <li>Revisar i reparar fuites setmanals</li>
                                 <li>Instal·lar inodors de doble flux (4.5L vs 9L)</li>
                                 <li>Crear sistema de recollida d'aigua de pluja</li>
-                                <li>Educar usuaris sobre estalvi</li>
+                                <li>Monitorització contínua de consums</li>
                             </ul>
 
                             <div class="impact-box">
-                                <strong>💰 Impacte estimat:</strong> De 50 m³/mes → 30 m³/mes (40% reducció)
+                                <strong>💰 Impacte estimat:</strong> De 110 m³/any → 66 m³/any (40% reducció)
                             </div>
                         </div>
                     </div>
@@ -228,23 +278,25 @@
                             <span class="potential-saving">Estalvi potencial: 35-50%</span>
                         </div>
                         <div class="strategy-content">
-                            <h4>📚 Cicles Escolar:</h4>
+                            <h4>📚 Situació ITB:</h4>
                             <ul>
-                                <li><strong>Setembre-Octubre:</strong> Pic màxim (+50%).</li>
-                                <li><strong>Juliol-Agost:</strong> Consum mínim.</li>
+                                <li><strong>Paper A4 80g actual:</strong> 10 paquets/mes (1000 fulls)</li>
+                                <li><strong>Tòner HP 203X:</strong> 2 unitats/mes</li>
+                                <li><strong>Proveïdors:</strong> Lyreco, Amazon</li>
+                                <li><strong>Potencial d'optimització:</strong> Alt (transició digital)</li>
                             </ul>
 
                             <h4>📄 Accions Immediates:</h4>
                             <ul>
                                 <li>Implementar política "paperless" (estalvi 60%)</li>
                                 <li>Imprimir en doble cara per defecte (estalvi 50%)</li>
-                                <li>Usar paper reciclat (30% més econòmic)</li>
+                                <li>Usar paper reciclat certificat</li>
                                 <li>Crear biblioteca de tòners reutilitzables</li>
-                                <li>Compartir impresores entre departaments</li>
+                                <li>Reduir a 5 paquets/mes (50% reducció)</li>
                             </ul>
 
                             <div class="impact-box">
-                                <strong>💰 Impacte estimat:</strong> De 180 kg/mes → 90 kg/mes (50% reducció)
+                                <strong>💰 Impacte estimat:</strong> De 10 paq/mes → 5 paq/mes (50% reducció)
                             </div>
                         </div>
                     </div>
@@ -255,133 +307,33 @@
                             <span class="potential-saving">Estalvi potencial: 30-45%</span>
                         </div>
                         <div class="strategy-content">
-                            <h4>🧼 Variabilitat per Activitat:</h4>
+                            <h4>🧼 Situació ITB (Dades Reals 2024):</h4>
                             <ul>
-                                <li><strong>Época lectiva:</strong> Consum alt (+40%).</li>
-                                <li><strong>Vacacions:</strong> Reducció 50%.</li>
+                                <li><strong>Cost mensual total:</strong> 996€ (factures 20/06 i 27/05)</li>
+                                <li><strong>Productes de neteja:</strong> ~620€/mes</li>
+                                <li><strong>Serveis (mà d'obra):</strong> ~376€/mes</li>
+                                <li><strong>Cost anual estimat:</strong> 11,952€</li>
+                                <li><strong>Per càpita:</strong> 10.87€/persona/mes</li>
                             </ul>
 
                             <h4>🧽 Accions Immediates:</h4>
                             <ul>
-                                <li>Cambiar a productes ecológicos concentrados</li>
-                                <li>Usar microfiber cloths (estalvi 80%)</li>
-                                <li>Preparar soluciones naturals: vinagre+aigua</li>
+                                <li>Cambiar a productes ecológicos concentrados (-15% cost)</li>
+                                <li>Usar microfiber cloths per reduir productes (-20%)</li>
+                                <li>Preparar soluciones naturals: vinagre+aigua (-25%)</li>
                                 <li>Implementar protocolos de neteja eficient</li>
-                                <li>Capacitar personal en dosificació correcta</li>
+                                <li>Formació del personal en dosificació correcta (-10%)</li>
                             </ul>
 
                             <div class="impact-box">
-                                <strong>💰 Impacte estimat:</strong> De 32 L/mes → 18 L/mes (44% reducció)
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="summary-card">
-                        <h3>📊 Resum Global de Potencial d'Estalvi</h3>
-                        <table class="summary-table">
-                            <tr>
-                                <th>Recurs</th>
-                                <th>Consum Actual</th>
-                                <th>Potencial</th>
-                                <th>Optimitzat</th>
-                                <th>Estalvi/any</th>
-                            </tr>
-                            <tr>
-                                <td>Electricitat</td>
-                                <td>1500 kWh</td>
-                                <td>30%</td>
-                                <td>1050 kWh</td>
-                                <td>1.890€</td>
-                            </tr>
-                            <tr>
-                                <td>Aigua</td>
-                                <td>50 m³</td>
-                                <td>40%</td>
-                                <td>30 m³</td>
-                                <td>480€</td>
-                            </tr>
-                            <tr>
-                                <td>Consumibles</td>
-                                <td>180 kg</td>
-                                <td>50%</td>
-                                <td>90 kg</td>
-                                <td>540€</td>
-                            </tr>
-                            <tr>
-                                <td>Neteja</td>
-                                <td>32 L</td>
-                                <td>44%</td>
-                                <td>18 L</td>
-                                <td>1.350€</td>
-                            </tr>
-                            <tr class="total-row">
-                                <td><strong>TOTAL ANUAL</strong></td>
-                                <td colspan="3"></td>
-                                <td><strong>4.260€</strong></td>
-                            </tr>
-                        </table>
-                    </div>
-                </section>
-            </div>
-
-            <!-- TAB 3: PREDICCIÓ -->
-            <div id="forecast" class="tab-content">
-                <section class="forecast-section">
-                    <h2>🔮 Predicció Estacional de Consum</h2>
-                    <p class="intro-text">Predicció basada en cicles estacionals per a cada mes de l'any. Les prediccions varien per any segons la implementació d'estratègies.</p>
-
-                    <div class="forecast-controls">
-                        <label for="forecastYear">Any:</label>
-                        <select id="forecastYear" onchange="updateForecast()">
-                            <option value="2026" selected>2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                        </select>
-                    </div>
-
-                    <div class="forecast-info" id="forecastInfo"></div>
-
-                    <div class="forecast-grid">
-                        <div class="forecast-card">
-                            <h3>⚡ Electricitat (kWh)</h3>
-                            <canvas id="electricityChart"></canvas>
-                            <div class="forecast-summary">
-                                <p><strong>Temps fort:</strong> Gener-Febrer</p>
-                                <p><strong>Promig anual:</strong> <span id="elecAvg">0</span> kWh/mes</p>
-                            </div>
-                        </div>
-
-                        <div class="forecast-card">
-                            <h3>💧 Aigua (m³)</h3>
-                            <canvas id="waterChart"></canvas>
-                            <div class="forecast-summary">
-                                <p><strong>Temps fort:</strong> Juny-Agost</p>
-                                <p><strong>Promig anual:</strong> <span id="waterAvg">0</span> m³/mes</p>
-                            </div>
-                        </div>
-
-                        <div class="forecast-card">
-                            <h3>📎 Consumibles (kg)</h3>
-                            <canvas id="suppliesChart"></canvas>
-                            <div class="forecast-summary">
-                                <p><strong>Temps fort:</strong> Setembre-Octubre</p>
-                                <p><strong>Promig anual:</strong> <span id="suppliesAvg">0</span> kg/mes</p>
-                            </div>
-                        </div>
-
-                        <div class="forecast-card">
-                            <h3>🧹 Neteja (litres)</h3>
-                            <canvas id="cleaningChart"></canvas>
-                            <div class="forecast-summary">
-                                <p><strong>Temps fort:</strong> Setembre-Octubre</p>
-                                <p><strong>Promig anual:</strong> <span id="cleaningAvg">0</span> L/mes</p>
+                                <strong>💰 Impacte estimat:</strong> De 996€/mes → 647.40€/mes (35% reducció = 4,183.20€/any)
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
 
-            <!-- TAB 4: PLA MENSUAL -->
+            <!-- TAB 3: PLA MENSUAL -->
             <div id="planning" class="tab-content">
                 <section class="planning-section">
                     <h2>📅 Pla Mensual d'Estratègies</h2>
@@ -426,12 +378,70 @@
                 </section>
             </div>
 
+            <!-- TAB 4: PREDICCIÓ -->
+            <div id="forecast" class="tab-content">
+                <section class="forecast-section">
+                    <h2>🔮 Predicció Estacional de Consum - Basada en dades ITB</h2>
+                    <p class="intro-text">Predicció basada en consums reals del ITB i cicles estacionals. Les prediccions varien per any segons la implementació d'estratègies.</p>
+
+                    <div class="forecast-controls">
+                        <label for="forecastYear">Any:</label>
+                        <select id="forecastYear" onchange="updateForecast()">
+                            <option value="2026" selected>2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                        </select>
+                    </div>
+
+                    <div class="forecast-info" id="forecastInfo"></div>
+
+                    <div class="forecast-grid">
+                        <div class="forecast-card">
+                            <h3>⚡ Electricitat (kWh/mes)</h3>
+                            <canvas id="electricityChart"></canvas>
+                            <div class="forecast-summary">
+                                <p><strong>Base ITB:</strong> 419.79 kWh/mes (import)</p>
+                                <p><strong>Promig anual:</strong> <span id="elecAvg">0</span> kWh/mes</p>
+                            </div>
+                        </div>
+
+                        <div class="forecast-card">
+                            <h3>💧 Aigua (m³/mes)</h3>
+                            <canvas id="waterChart"></canvas>
+                            <div class="forecast-summary">
+                                <p><strong>Base ITB:</strong> 9.17 m³/mes (110 m³/any)</p>
+                                <p><strong>Promig anual:</strong> <span id="waterAvg">0</span> m³/mes</p>
+                            </div>
+                        </div>
+
+                        <div class="forecast-card">
+                            <h3>📎 Consumibles (paquets A4/mes)</h3>
+                            <canvas id="suppliesChart"></canvas>
+                            <div class="forecast-summary">
+                                <p><strong>Base ITB:</strong> 10 paquets/mes</p>
+                                <p><strong>Promig anual:</strong> <span id="suppliesAvg">0</span> paq/mes</p>
+                            </div>
+                        </div>
+
+                        <div class="forecast-card">
+                            <h3>🧹 Neteja (€/mes)</h3>
+                            <canvas id="cleaningChart"></canvas>
+                            <div class="forecast-summary">
+                                <p><strong>Base ITB:</strong> 996€/mes (11,952€/any)</p>
+                                <p><strong>Promig anual:</strong> <span id="cleaningAvg">0</span>€/mes</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
             <!-- TAB 5: PLA 3 ANYS -->
             <div id="actionplan" class="tab-content">
                 <section class="actionplan-section">
                     <h2>🎯 Pla d'Accions a 3 Anys - Reducció 30%</h2>
                     <p class="intro-text">Pla detallat per reduir un 30% l'impacte ambiental en 3 anys amb accions concretes i measurables.</p>
-                    <p style="text-align: center; color: #667eea; font-weight: 600;">👉 Aplica les estratègies al tab "Calculadora" per veure el teu impacte personalitzat</p>
+
+                    <div id="actionPlanContent"></div>
                 </section>
             </div>
         </div>
