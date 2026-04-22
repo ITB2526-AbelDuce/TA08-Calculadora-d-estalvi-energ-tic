@@ -483,19 +483,22 @@ section h2 {
 }
 
 .forecast-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-    gap: 30px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 25px !important;
     margin-bottom: 45px;
 }
 
 .forecast-card {
     background: #f9f9f9;
-    padding: 28px;
+    padding: 15px;
     border-radius: 12px;
     border: 2px solid #e0e0e0;
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .forecast-card:hover {
@@ -505,23 +508,25 @@ section h2 {
 
 .forecast-card h3 {
     color: #667eea;
-    margin-bottom: 20px;
-    font-size: 1.25em;
+    margin-bottom: 12px;
+    font-size: 1em;
 }
 
 .forecast-card canvas {
-    max-height: 320px;
-    margin-bottom: 20px;
+    max-height: 200px;
+    margin-bottom: 12px;
+    flex-grow: 1;
 }
 
 .forecast-summary {
-    font-size: 0.95em;
+    font-size: 0.8em;
     color: #666;
-    line-height: 1.9;
+    line-height: 1.6;
+    margin-top: auto;
 }
 
 .forecast-summary p {
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 
 .forecast-summary strong {
@@ -554,14 +559,14 @@ section h2 {
 
 .planning-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
     margin-bottom: 40px;
 }
 
 .planning-card {
     background: #f9f9f9;
-    padding: 25px;
+    padding: 10px;
     border-radius: 12px;
     border: 2px solid #e0e0e0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -569,37 +574,37 @@ section h2 {
 
 .planning-card h3 {
     color: #667eea;
-    margin-bottom: 20px;
-    font-size: 1.25em;
+    margin-bottom: 10px;
+    font-size: 1em;
     border-bottom: 2px solid #667eea;
-    padding-bottom: 12px;
+    padding-bottom: 8px;
 }
 
 .month-row {
     display: flex;
     align-items: center;
-    margin-bottom: 12px;
-    gap: 10px;
-    padding: 10px;
+    margin-bottom: 6px;
+    gap: 5px;
+    padding: 5px 8px;
     background: white;
     border-radius: 6px;
     border: 1px solid #e0e0e0;
 }
 
 .month-row label {
-    min-width: 80px;
+    min-width: 55px;
     font-weight: 600;
     color: #555;
-    font-size: 0.9em;
+    font-size: 0.75em;
     margin: 0;
 }
 
 .month-row select {
     flex: 1;
-    padding: 8px 12px;
+    padding: 4px 6px;
     border: 1px solid #ddd;
     border-radius: 6px;
-    font-size: 0.85em;
+    font-size: 0.72em;
     background-color: white;
     cursor: pointer;
 }
@@ -611,13 +616,13 @@ section h2 {
 .reduction-info {
     background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
     color: white;
-    padding: 6px 12px;
+    padding: 3px 6px;
     border-radius: 6px;
     font-weight: 600;
-    font-size: 0.8em;
+    font-size: 0.7em;
     white-space: nowrap;
     text-align: center;
-    min-width: 45px;
+    min-width: 35px;
 }
 
 .planning-summary {
@@ -1061,6 +1066,10 @@ section h2 {
     }
 }
 
+@media (max-width: 1400px) {
+    /* forecast-grid stays 2x2 */
+}
+
 @media (max-width: 768px) {
     body { padding: 15px; }
     header h1 { font-size: 1.8em; }
@@ -1069,7 +1078,7 @@ section h2 {
     section { padding: 25px; }
     .calculations-grid { grid-template-columns: 1fr; }
     .data-tables { grid-template-columns: 1fr; }
-    .forecast-grid { grid-template-columns: 1fr; }
+    .forecast-grid { grid-template-columns: 1fr !important; }
     .planning-grid { grid-template-columns: 1fr; }
     .strategy-header { flex-direction: column; align-items: flex-start; }
     .modal-content { width: 95%; padding: 25px; }
