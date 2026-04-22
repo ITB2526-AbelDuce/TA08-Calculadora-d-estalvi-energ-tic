@@ -322,6 +322,19 @@ function savePlanningAndUpdateForecast() {
     showResult('✅ Pla guardat', 'Les teves estratègies s\'han desat i les prediccions s\'han actualitzat correctament!');
 }
 
+function clearMonthlyPlan() {
+    const year = document.getElementById('planningYear').value;
+    const types = ['electricity', 'water', 'officeSupplies', 'cleaningProducts'];
+    types.forEach(type => {
+        monthlyStrategies[year][type] = {};
+    });
+    saveMonthlyStrategies();
+    updatePlanningDisplay();
+    recalculateGrowthFactors(year);
+    updateForecast();
+    showResult('🗑️ Pla esborrat', `Totes les estratègies del ${year} s'han eliminat correctament.`);
+}
+
 function recalculateGrowthFactors(year) {
     const types = ['electricity', 'water', 'officeSupplies', 'cleaningProducts'];
     let totalReductionPercentage = 0;
