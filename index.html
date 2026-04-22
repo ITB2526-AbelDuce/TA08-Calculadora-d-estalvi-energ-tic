@@ -15,10 +15,9 @@
 
         <nav class="tabs">
             <button class="tab-btn active" onclick="switchTab('calculator')">📈 Calculadora</button>
-            <button class="tab-btn" onclick="switchTab('strategies')">💡 Estratègies</button>
-            <button class="tab-btn" onclick="switchTab('planning')">📅 Pla Mensual</button>
-            <button class="tab-btn" onclick="switchTab('forecast')">🔮 Predicció</button>
             <button class="tab-btn" onclick="switchTab('actionplan')">🎯 Pla 3 Anys</button>
+            <button class="tab-btn" onclick="switchTab('strategies')">💡 Estratègies</button>
+            <button class="tab-btn" onclick="switchTab('forecast')">🔮 Predicció</button>
         </nav>
 
         <div class="main-content">
@@ -161,7 +160,17 @@
                 </section>
             </div>
 
-            <!-- TAB 2: ESTRATÈGIES -->
+            <!-- TAB 2: PLA 3 ANYS -->
+            <div id="actionplan" class="tab-content">
+                <section class="actionplan-section">
+                    <h2>🎯 Pla d'Accions a 3 Anys - Reducció 30%</h2>
+                    <p class="intro-text">Pla detallat per reduir un 30% l'impacte ambiental en 3 anys amb accions concretes i measurables.</p>
+
+                    <div id="actionPlanContent"></div>
+                </section>
+            </div>
+
+            <!-- TAB 3: ESTRATÈGIES -->
             <div id="strategies" class="tab-content">
                 <section class="strategies-section">
                     <h2>💡 Estratègies de Reducció de Consum</h2>
@@ -333,8 +342,9 @@
                 </section>
             </div>
 
-            <!-- TAB 3: PLA MENSUAL -->
-            <div id="planning" class="tab-content">
+            <!-- TAB 4: PREDICCIÓ (PLA MENSUAL + PREDICCIÓ) -->
+            <div id="forecast" class="tab-content">
+                <!-- SECCIÓ PLA MENSUAL -->
                 <section class="planning-section">
                     <h2>📅 Pla Mensual d'Estratègies</h2>
                     <p class="intro-text">Planifica quines estratègies implementaràs cada mes per a cada tipus de consum. Els impactes es reflectiran automàticament a les prediccions.</p>
@@ -376,10 +386,8 @@
                         <button class="btn btn-success" onclick="savePlanningAndUpdateForecast()">💾 Guardar Pla i Actualitzar Prediccions</button>
                     </div>
                 </section>
-            </div>
 
-            <!-- TAB 4: PREDICCIÓ -->
-            <div id="forecast" class="tab-content">
+                <!-- SECCIÓ PREDICCIÓ -->
                 <section class="forecast-section">
                     <h2>🔮 Predicció Estacional de Consum - Basada en dades ITB</h2>
                     <p class="intro-text">Predicció basada en consums reals del ITB i cicles estacionals. Les prediccions varien per any segons la implementació d'estratègies.</p>
@@ -432,16 +440,6 @@
                             </div>
                         </div>
                     </div>
-                </section>
-            </div>
-
-            <!-- TAB 5: PLA 3 ANYS -->
-            <div id="actionplan" class="tab-content">
-                <section class="actionplan-section">
-                    <h2>🎯 Pla d'Accions a 3 Anys - Reducció 30%</h2>
-                    <p class="intro-text">Pla detallat per reduir un 30% l'impacte ambiental en 3 anys amb accions concretes i measurables.</p>
-
-                    <div id="actionPlanContent"></div>
                 </section>
             </div>
         </div>
