@@ -27,11 +27,11 @@ const itbData = {
         providers: ['Lyreco', 'Amazon']
     },
     cleaningProducts: {
-        monthly_cost: 996,  // ✅ Total mensual (productes + serveis)
-        products_cost: 620,  // ✅ Productes de neteja
-        services_cost: 376,  // ✅ Serveis (mà d'obra)
-        annual_cost: 11952,  // ✅ 996 × 12
-        per_capita_monthly: 10.87,  // 996 / 1100 persones
+        monthly_cost: 996,
+        products_cost: 620,
+        services_cost: 376,
+        annual_cost: 11952,
+        per_capita_monthly: 10.87,
         currency: '€'
     }
 };
@@ -81,7 +81,7 @@ const prices = {
     electricity: 0.20,
     water: itbData.water.price_per_m3,
     officeSupplies: 7.50,
-    cleaningProducts: 1  // Per mantenir els números en € (ja que el cost és mensual en €)
+    cleaningProducts: 1
 };
 
 let monthlyStrategies = {
@@ -108,8 +108,7 @@ function switchTab(tabName) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById(tabName).classList.add('active');
     event.target.classList.add('active');
-    if (tabName === 'forecast') setTimeout(() => updateForecast(), 100);
-    if (tabName === 'planning') setTimeout(() => updatePlanningDisplay(), 100);
+    if (tabName === 'forecast') setTimeout(() => { updatePlanningDisplay(); updateForecast(); }, 100);
     if (tabName === 'actionplan') setTimeout(() => generateActionPlan(), 100);
 }
 
@@ -363,7 +362,7 @@ function loadMonthlyStrategies() {
     }
 }
 
-// PREDICCIÓ - ✅ BASADA EN DADES ITB
+// PREDICCIÓ
 function getYearForecastDescription(year) {
     const descriptions = {
         2026: '📊 Predicció 2026 (Any base - sense canvis)',
@@ -517,7 +516,7 @@ function generateSuppliesForecast(year) {
 }
 
 function generateCleaningForecast(year) {
-    const baseConsumption = itbData.cleaningProducts.monthly_cost;  // ✅ 996€/mes
+    const baseConsumption = itbData.cleaningProducts.monthly_cost;
     const growthFactor = yearGrowthFactors[year] || 1.00;
     const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
 
