@@ -625,6 +625,28 @@ section h2 {
     min-width: 35px;
 }
 
+.planning-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 0;
+}
+
+.planning-buttons .btn {
+    flex: 1;
+    margin-top: 25px;
+}
+
+.btn-clear-plan {
+    background: rgba(255, 71, 87, 0.85);
+    color: white;
+}
+
+.btn-clear-plan:hover {
+    background: #ff3838;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(255, 71, 87, 0.4);
+}
+
 .planning-summary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
