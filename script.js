@@ -113,6 +113,14 @@ function switchTab(tabName) {
 }
 
 // ESTRATÈGIES
+function checkAddButton() {
+    const type = document.getElementById('consumptionType').value;
+    const value = parseFloat(document.getElementById('consumptionValue').value);
+    const date = document.getElementById('consumptionDate').value;
+    const btn = document.getElementById('addDataBtn');
+    btn.style.display = (type && value > 0 && date) ? 'block' : 'none';
+}
+
 function updateStrategiesSelect() {
     const consumptionType = document.getElementById('consumptionType').value;
     const strategiesContainer = document.getElementById('strategiesContainer');
@@ -178,6 +186,7 @@ function addConsumption() {
     updateDataDisplay();
     generateActionPlan();
     document.getElementById('consumptionValue').value = '';
+    document.getElementById('addDataBtn').style.display = 'none';
     alert('✅ Dada afegida correctament!');
 }
 
