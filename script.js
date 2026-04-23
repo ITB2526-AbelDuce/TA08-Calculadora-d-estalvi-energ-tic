@@ -449,6 +449,7 @@ function generateElectricityForecast(year) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: { legend: { display: true } },
             scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + ' kWh'; } } } }
         }
@@ -493,6 +494,7 @@ function generateWaterForecast(year) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: { legend: { display: true } },
             scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + ' m³'; } } } }
         }
@@ -531,6 +533,7 @@ function generateSuppliesForecast(year) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: { legend: { display: true } },
             scales: { y: { beginAtZero: true, ticks: { callback: function(value) { return value + ' paq'; } } } }
         }
@@ -575,6 +578,7 @@ function generateCleaningForecast(year) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: { legend: { display: true } },
             scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + '€'; } } } }
         }
