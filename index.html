@@ -4,9 +4,1033 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Consum de Recursos</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
+/* ── CSS VARIABLES ─────────────────────────────────────────── */
+:root {
+    --bg:         #f4f2ee;
+    --surface:    #ffffff;
+    --surface-2:  #f7f6f2;
+    --border:     #e4e0d8;
+    --border-2:   #d5d0c6;
+
+    --primary:    #2d6a4f;
+    --primary-dk: #1b4332;
+    --primary-lt: #d8f3dc;
+
+    --accent:     #b5863a;
+    --accent-lt:  #fdf3e3;
+
+    --danger:     #c0392b;
+    --danger-lt:  #fdecea;
+
+    --text-1:     #1a1a18;
+    --text-2:     #4a4a44;
+    --text-3:     #7a7a70;
+
+    --elec:       #5c7a6b;
+    --elec-lt:    #e8f0ec;
+    --water:      #4a6d82;
+    --water-lt:   #e6eef3;
+    --supply:     #7a6b3a;
+    --supply-lt:  #f3ede0;
+    --clean:      #5c5a7a;
+    --clean-lt:   #eeedf5;
+
+    --radius:     10px;
+    --shadow-sm:  0 2px 8px rgba(0,0,0,0.06);
+    --shadow-md:  0 6px 24px rgba(0,0,0,0.09);
+}
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── BASE ───────────────────────────────────────────────────── */
+body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(circle at 18% 18%, rgba(45,106,79,0.08) 0%, transparent 52%),
+        radial-gradient(circle at 82% 82%, rgba(181,134,58,0.07) 0%, transparent 52%);
+    min-height: 100vh;
+    padding: 36px 24px;
+    color: var(--text-1);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+header {
+    text-align: center;
+    margin-bottom: 36px;
+    animation: slideDown 0.7s ease-out both;
+}
+
+header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.6em;
+    font-weight: 400;
+    color: var(--primary-dk);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    font-size: 1em;
+    color: var(--text-3);
+    font-weight: 300;
+    letter-spacing: 0.01em;
+}
+
+/* ── TABS ───────────────────────────────────────────────────── */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: var(--surface);
+    padding: 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-btn {
+    padding: 10px 22px;
+    background: transparent;
+    border: 1.5px solid transparent;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92em;
+    font-weight: 500;
+    color: var(--text-2);
+    transition: all 0.25s ease;
+    letter-spacing: 0.01em;
+}
+
+.tab-btn:hover {
+    background: var(--surface-2);
+    border-color: var(--border);
+    color: var(--primary);
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 3px 10px rgba(45,106,79,0.3);
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────────── */
+.main-content { display: flex; flex-direction: column; }
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.45s ease-out;
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.tab-content.active { display: block; }
+
+section {
+    padding: 40px;
+    border-bottom: 1px solid var(--border);
+}
+
+section:last-child { border-bottom: none; }
+
+section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 1.45em;
+    color: var(--primary-dk);
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--primary-lt);
+    letter-spacing: -0.01em;
+}
+
+.intro-text {
+    color: var(--text-3);
+    margin-bottom: 24px;
+    line-height: 1.75;
+    font-size: 0.97em;
+}
+
+/* ── FORM ELEMENTS ──────────────────────────────────────────── */
+.input-group { margin-bottom: 22px; }
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-2);
+    font-size: 0.93em;
+    letter-spacing: 0.01em;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.97em;
+    color: var(--text-1);
+    background: var(--surface);
+    transition: all 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
+}
+
+/* ── BUTTONS ────────────────────────────────────────────────── */
+.btn {
+    padding: 12px 26px;
+    border: none;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.97em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.01em;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dk);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(45,106,79,0.3);
+}
+
+.btn-secondary {
+    background: var(--surface-2);
+    color: var(--text-2);
+    margin-top: 10px;
+    width: 100%;
+    border: 1.5px solid var(--border);
+}
+
+.btn-secondary:hover {
+    background: var(--primary-lt);
+    color: var(--primary-dk);
+    border-color: var(--primary);
+}
+
+.btn-success {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+    margin-top: 28px;
+}
+
+.btn-success:hover {
+    background: var(--primary-dk);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(45,106,79,0.3);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+    width: 100%;
+}
+
+.btn-danger:hover {
+    background: #a93226;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(192,57,43,0.3);
+}
+
+/* ── CALC CARDS ─────────────────────────────────────────────── */
+.calculations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.calc-card {
+    padding: 24px;
+    border-radius: var(--radius);
+    border: 1.5px solid;
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.calc-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.calc-card h3 {
+    margin-bottom: 16px;
+    font-size: 1.05em;
+    font-weight: 600;
+}
+
+.calc-card.electricity { background: var(--elec-lt); border-color: #b8cfc7; color: var(--elec); }
+.calc-card.water       { background: var(--water-lt); border-color: #b3c8d5; color: var(--water); }
+.calc-card.supplies    { background: var(--supply-lt); border-color: #d0c8a8; color: var(--supply); }
+.calc-card.cleaning    { background: var(--clean-lt); border-color: #c5c4d8; color: var(--clean); }
+
+.calc-card .btn-secondary {
+    background: white;
+    border-color: currentColor;
+    color: inherit;
+    opacity: 0.85;
+}
+
+.calc-card .btn-secondary:hover { opacity: 1; background: white; }
+
+/* ── DATA TABLES ────────────────────────────────────────────── */
+.data-tables {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.data-table {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    max-height: 450px;
+    overflow-y: auto;
+    background: var(--surface-2);
+    box-shadow: var(--shadow-sm);
+}
+
+.data-table h3 { color: var(--primary); margin-bottom: 16px; font-size: 1em; font-weight: 600; }
+
+.data-table table { width: 100%; border-collapse: collapse; font-size: 0.88em; }
+
+.data-table th {
+    background: var(--surface);
+    padding: 11px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--primary-dk);
+    border-bottom: 2px solid var(--primary-lt);
+    font-size: 0.88em;
+}
+
+.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.84em;
+    color: var(--text-2);
+}
+
+.data-table tr:hover td { background: var(--surface); }
+
+.btn-delete {
+    background: var(--danger-lt);
+    color: var(--danger);
+    padding: 4px 10px;
+    border: 1px solid #f1bab5;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.78em;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-delete:hover { background: var(--danger); color: white; border-color: var(--danger); }
+
+/* ── STRATEGY CARDS ─────────────────────────────────────────── */
+.strategy-card {
+    background: var(--surface-2);
+    border-left: 4px solid;
+    padding: 26px;
+    margin-bottom: 22px;
+    border-radius: var(--radius);
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.strategy-card:hover { box-shadow: var(--shadow-md); transform: translateX(4px); }
+
+.electricity-strategy { border-left-color: var(--elec); }
+.water-strategy       { border-left-color: var(--water); }
+.supplies-strategy    { border-left-color: var(--supply); }
+.cleaning-strategy    { border-left-color: var(--clean); }
+
+.strategy-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.strategy-header h3 { color: var(--text-1); font-size: 1.2em; font-weight: 600; margin: 0; }
+
+.potential-saving {
+    background: var(--accent-lt);
+    color: var(--accent);
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.88em;
+    border: 1px solid #e8d5b0;
+    white-space: nowrap;
+}
+
+.strategy-content h4 { color: var(--primary); margin-top: 20px; margin-bottom: 12px; font-size: 1em; font-weight: 600; }
+
+.strategy-content ul { list-style: none; margin-bottom: 16px; }
+
+.strategy-content li {
+    padding: 10px 0 10px 26px;
+    position: relative;
+    line-height: 1.7;
+    color: var(--text-2);
+    font-size: 0.95em;
+}
+
+.strategy-content li:before { content: "✓"; position: absolute; left: 0; color: var(--primary); font-weight: bold; font-size: 1.1em; }
+
+.impact-box {
+    background: var(--primary);
+    color: white;
+    padding: 18px 20px;
+    border-radius: 8px;
+    margin-top: 18px;
+    font-size: 0.97em;
+    font-weight: 500;
+    box-shadow: 0 3px 10px rgba(45,106,79,0.2);
+}
+
+/* ── SUMMARY CARD ───────────────────────────────────────────── */
+.summary-card {
+    background: var(--primary-dk);
+    color: white;
+    padding: 32px;
+    border-radius: var(--radius);
+    margin-top: 32px;
+    margin-bottom: 52px;
+    box-shadow: 0 6px 20px rgba(27,67,50,0.25);
+}
+
+.summary-card h3 {
+    margin-bottom: 22px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 1.35em;
+}
+
+.summary-table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 0.93em; }
+
+.summary-table th { background: rgba(0,0,0,0.2); padding: 14px 16px; text-align: left; font-weight: 600; }
+.summary-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.12); }
+.summary-table tr:hover td { background: rgba(255,255,255,0.07); }
+.total-row { background: rgba(0,0,0,0.25); font-weight: 700; font-size: 1.05em; }
+
+/* ── FORECAST CONTROLS ──────────────────────────────────────── */
+.forecast-controls {
+    margin-bottom: 30px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 18px 20px;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.forecast-controls label { font-weight: 500; font-size: 0.95em; color: var(--text-2); }
+
+.forecast-controls select {
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95em;
+    min-width: 140px;
+    color: var(--text-1);
+    background: var(--surface);
+}
+
+.forecast-info {
+    background: var(--primary);
+    color: white;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    margin-bottom: 22px;
+    font-weight: 500;
+    text-align: center;
+    font-size: 0.95em;
+}
+
+/* ── FORECAST GRID 2x2 ──────────────────────────────────────── */
+.forecast-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 24px !important;
+    margin-bottom: 40px;
+    align-items: start;
+}
+
+.forecast-card {
+    background: var(--surface-2);
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    transition: all 0.25s ease;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+}
+
+.forecast-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary); }
+
+.forecast-card h3 { color: var(--primary-dk); margin-bottom: 14px; font-size: 0.97em; font-weight: 600; }
+
+.forecast-card canvas {
+    width: 100% !important;
+    min-height: 200px;
+    max-height: 220px;
+    margin-bottom: 14px;
+    display: block;
+}
+
+.forecast-summary {
+    font-size: 0.8em;
+    color: var(--text-3);
+    line-height: 1.6;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+}
+
+.forecast-summary p { margin-bottom: 4px; }
+.forecast-summary strong { color: var(--text-2); }
+
+/* ── PLANNING CONTROLS ──────────────────────────────────────── */
+.planning-controls {
+    margin-bottom: 26px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.planning-controls label { font-weight: 500; font-size: 0.95em; color: var(--text-2); }
+
+.planning-controls select {
+    padding: 10px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95em;
+    min-width: 140px;
+    color: var(--text-1);
+    background: var(--surface);
+}
+
+/* ── PLANNING GRID 4 cols ───────────────────────────────────── */
+.planning-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 36px;
+}
+
+.planning-card {
+    background: var(--surface-2);
+    padding: 14px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.planning-card h3 {
+    color: var(--primary-dk);
+    margin-bottom: 12px;
+    font-size: 0.92em;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-lt);
+    padding-bottom: 8px;
+}
+
+.month-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 5px;
+    padding: 5px 8px;
+    background: var(--surface);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+}
+
+.month-row:hover { border-color: var(--primary); }
+
+.month-row label { min-width: 55px; font-weight: 500; color: var(--text-3); font-size: 0.75em; margin: 0; }
+
+.month-row select {
+    flex: 1;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72em;
+    background-color: var(--surface);
+    color: var(--text-1);
+    cursor: pointer;
+}
+
+.month-row select:hover { border-color: var(--primary); }
+
+.reduction-info {
+    background: var(--primary-lt);
+    color: var(--primary-dk);
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 0.7em;
+    white-space: nowrap;
+    text-align: center;
+    min-width: 35px;
+    border: 1px solid #b7d8c2;
+}
+
+/* ── PLANNING SUMMARY ───────────────────────────────────────── */
+.planning-buttons { display: flex; gap: 14px; margin-top: 0; }
+.planning-buttons .btn { flex: 1; margin-top: 22px; }
+
+.btn-clear-plan {
+    background: var(--danger-lt);
+    color: var(--danger);
+    border: 1.5px solid #f1bab5;
+}
+
+.btn-clear-plan:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(192,57,43,0.25);
+}
+
+.planning-summary {
+    background: var(--primary-dk);
+    color: white;
+    padding: 32px;
+    border-radius: var(--radius);
+    box-shadow: 0 6px 20px rgba(27,67,50,0.2);
+}
+
+.planning-summary h3 {
+    margin-bottom: 22px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 1.35em;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 14px;
+}
+
+#planningSummary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    background: rgba(255,255,255,0.08);
+    padding: 18px;
+    border-radius: 8px;
+    border-left: 3px solid rgba(255,255,255,0.2);
+    text-align: center;
+}
+
+.summary-item strong { display: block; margin-bottom: 8px; font-size: 0.97em; font-weight: 500; opacity: 0.9; }
+.summary-item .value { font-size: 1.45em; font-weight: 700; color: #a8e6c0; }
+
+/* ── ACTION PLAN ────────────────────────────────────────────── */
+.actionplan-section { padding: 40px; }
+
+.no-data-message {
+    background: var(--accent-lt);
+    border: 1.5px solid #e8d5b0;
+    padding: 28px;
+    border-radius: var(--radius);
+    text-align: center;
+    color: var(--accent);
+}
+
+.no-data-message p { font-size: 1em; margin: 8px 0; }
+
+.actionplan-summary-box {
+    background: var(--primary-dk);
+    color: white;
+    padding: 28px;
+    border-radius: var(--radius);
+    margin-bottom: 36px;
+    box-shadow: 0 6px 20px rgba(27,67,50,0.2);
+}
+
+.actionplan-summary-box h3 {
+    margin-bottom: 22px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 1.25em;
+}
+
+.actionplan-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 18px;
+}
+
+.actionplan-card {
+    background: var(--surface);
+    color: var(--text-1);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1.5px solid var(--border);
+}
+
+.actionplan-card-header { background: var(--primary); color: white; padding: 18px 20px; }
+.actionplan-card-header h4 { margin: 0; font-size: 1.05em; font-weight: 600; }
+.actionplan-card-body { padding: 18px 20px; }
+
+.actionplan-metric {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.actionplan-metric .label { font-weight: 500; color: var(--text-2); font-size: 0.9em; }
+.actionplan-metric .value { color: var(--primary); font-weight: 600; font-size: 1em; }
+.actionplan-metric .value.target { color: var(--primary); }
+.actionplan-metric .value.saving { color: var(--danger); }
+
+.actionplan-metric .value.savings-money {
+    background: var(--primary);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.9em;
+}
+
+/* ── TIMELINE ───────────────────────────────────────────────── */
+.actionplan-timeline {
+    margin: 36px 0;
+    background: var(--surface-2);
+    padding: 28px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.actionplan-timeline h3 {
+    color: var(--primary-dk);
+    margin-bottom: 26px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 1.2em;
+}
+
+.timeline { position: relative; padding: 18px 0; }
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 30px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-lt) 100%);
+}
+
+.timeline-item { margin-bottom: 26px; padding-left: 100px; position: relative; }
+
+.timeline-marker {
+    position: absolute;
+    left: -15px; top: 0;
+    background: var(--surface);
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    width: 58px; height: 58px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.timeline-year { font-weight: 700; color: var(--primary); font-size: 1em; }
+
+.timeline-reduction {
+    background: var(--primary-lt);
+    color: var(--primary-dk);
+    font-size: 0.78em;
+    font-weight: 700;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+
+.timeline-content {
+    background: var(--surface);
+    padding: 18px 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.timeline-content h4 { color: var(--primary); margin-bottom: 12px; font-size: 1em; }
+
+.actions-list { list-style: none; margin: 0; padding: 0; }
+
+.actions-list li {
+    padding: 8px 0 8px 26px;
+    position: relative;
+    color: var(--text-2);
+    line-height: 1.6;
+    font-size: 0.93em;
+}
+
+.actions-list li:before { content: "✓"; position: absolute; left: 0; color: var(--primary); font-weight: bold; font-size: 1.1em; }
+
+/* ── SAVINGS BOX ────────────────────────────────────────────── */
+.actionplan-savings-box {
+    background: var(--primary-dk);
+    color: white;
+    padding: 36px;
+    border-radius: var(--radius);
+    margin-top: 36px;
+    box-shadow: 0 6px 20px rgba(27,67,50,0.25);
+}
+
+.actionplan-savings-box h3 {
+    margin-bottom: 26px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 1.25em;
+}
+
+.savings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    margin-bottom: 36px;
+}
+
+.savings-card {
+    background: rgba(255,255,255,0.08);
+    padding: 18px;
+    border-radius: var(--radius);
+    border-left: 3px solid rgba(255,255,255,0.25);
+}
+
+.savings-card h4 { margin-bottom: 12px; font-size: 1em; font-weight: 600; }
+
+.savings-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.92em;
+}
+
+.savings-item.total {
+    border: none;
+    border-top: 1.5px solid rgba(255,255,255,0.35);
+    padding-top: 10px;
+    font-weight: 700;
+}
+
+.year-label { font-weight: 500; }
+.savings-amount { font-weight: 700; font-size: 1.05em; }
+
+.total-savings-summary {
+    text-align: center;
+    background: rgba(0,0,0,0.15);
+    padding: 28px;
+    border-radius: var(--radius);
+}
+
+.total-savings-summary h3 { margin-bottom: 18px; font-size: 1.1em; }
+
+.big-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3em;
+    font-weight: 400;
+    color: #a8e6c0;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    margin: 16px 0;
+}
+
+.total-savings-summary p { font-size: 1em; opacity: 0.85; }
+
+/* ── MODALS ─────────────────────────────────────────────────── */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(26,26,24,0.55);
+    animation: fadeIn 0.25s ease;
+    backdrop-filter: blur(2px);
+}
+
+.modal-content {
+    background-color: var(--surface);
+    margin: 5% auto;
+    padding: 38px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 720px;
+    box-shadow: 0 16px 56px rgba(0,0,0,0.2);
+    animation: slideDown 0.3s ease-out;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.close { color: var(--text-3); float: right; font-size: 28px; cursor: pointer; transition: color 0.2s; line-height: 1; }
+.close:hover { color: var(--text-1); }
+
+#resultTitle {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    color: var(--primary-dk);
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--primary-lt);
+    font-size: 1.35em;
+}
+
+#resultBody { margin: 22px 0; line-height: 1.9; }
+
+.result-item {
+    background: var(--surface-2);
+    padding: 16px;
+    margin: 12px 0;
+    border-left: 4px solid var(--primary);
+    border-radius: 6px;
+    font-size: 0.95em;
+    color: var(--text-2);
+}
+
+.result-item strong { color: var(--primary-dk); }
+
+.reduction-percent {
+    background: var(--primary-lt);
+    color: var(--primary-dk);
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: inline-block;
+    font-weight: 700;
+    margin-top: 8px;
+    font-size: 0.9em;
+}
+
+/* ── STRATEGY INFO ──────────────────────────────────────────── */
+.strategy-info {
+    background: var(--surface);
+    padding: 14px;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1.5px solid var(--border);
+}
+
+.strategy-info h4 { color: var(--primary); margin-bottom: 8px; font-size: 0.95em; }
+
+.strategy-info p { color: var(--text-3); margin: 6px 0; font-size: 0.92em; line-height: 1.6; }
+
+#strategiesContainer {
+    background: var(--primary-lt);
+    padding: 18px;
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary);
+    margin-bottom: 18px;
+}
+
+/* ── ANIMATIONS ─────────────────────────────────────────────── */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 1400px) { /* forecast stays 2x2 */ }
+
+@media (max-width: 900px) {
+    .planning-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    body { padding: 14px; }
+    header h1 { font-size: 1.9em; }
+    .tabs { gap: 8px; padding: 12px; }
+    .tab-btn { padding: 9px 14px; font-size: 0.88em; }
+    section { padding: 22px; }
+    .calculations-grid { grid-template-columns: 1fr; }
+    .data-tables { grid-template-columns: 1fr; }
+    .forecast-grid { grid-template-columns: 1fr !important; }
+    .planning-grid { grid-template-columns: 1fr; }
+    .strategy-header { flex-direction: column; align-items: flex-start; }
+    .modal-content { width: 95%; padding: 22px; }
+    .data-table th, .data-table td { padding: 8px; }
+    #planningSummary { grid-template-columns: 1fr; }
+    .month-row { flex-wrap: wrap; }
+    .timeline::before { left: 18px; }
+    .timeline-marker { left: -8px; width: 46px; height: 46px; }
+    .timeline-item { padding-left: 72px; }
+    .actionplan-grid { grid-template-columns: 1fr; }
+    .big-number { font-size: 2.2em; }
+    .planning-buttons { flex-direction: column; gap: 8px; }
+}
+
+/* ── SCROLLBAR ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--surface-2); border-radius: 8px; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    </style>
 </head>
-<body>
     <div class="container">
         <header>
             <h1>📊 Calculadora de Consum de Recursos</h1>
@@ -469,6 +1493,981 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
+    <script>
+// DADES GLOBALS
+let consumptionData = {
+    electricity: [],
+    water: [],
+    officeSupplies: [],
+    cleaningProducts: []
+};
+
+// ✅ DADES DEL ITB (JSON + FACTURES NETEJA)
+const itbData = {
+    electricity: {
+        base_monthly: 419.79,
+        solar_generation: 1419.86,
+        autoconsum_percentage: 94.2,
+        co2_saved: 0.69
+    },
+    water: {
+        annual_total: 110,
+        monthly_average: 9.17,
+        per_capita: 0.1,
+        cost_annual: 597.54,
+        price_per_m3: 5.43
+    },
+    officeSupplies: {
+        paper_a4_monthly: 10,
+        toner_monthly: 2,
+        providers: ['Lyreco', 'Amazon']
+    },
+    cleaningProducts: {
+        monthly_cost: 996,
+        products_cost: 620,
+        services_cost: 376,
+        annual_cost: 11952,
+        per_capita_monthly: 10.87,
+        currency: '€'
+    }
+};
+
+const seasonalFactors = {
+    electricity: [1.15, 1.10, 0.95, 0.85, 0.75, 0.85, 0.95, 1.05, 0.95, 0.90, 1.00, 1.20],
+    water: [0.95, 0.90, 0.95, 1.05, 1.10, 1.20, 1.30, 1.25, 1.10, 1.00, 0.95, 0.95],
+    officeSupplies: [0.80, 0.75, 0.85, 0.90, 0.85, 0.60, 0.20, 0.15, 1.50, 1.40, 0.90, 0.85],
+    cleaningProducts: [1.05, 1.00, 1.05, 1.10, 1.10, 1.00, 0.90, 0.95, 1.20, 1.15, 1.05, 1.00]
+};
+
+const yearGrowthFactors = {
+    2026: 1.00,
+    2027: 0.95,
+    2028: 0.90
+};
+
+// ESTRATÈGIES
+const strategies = {
+    electricity: [
+        { id: 'elec-led', name: '🔦 LED Lighting', reduction: 0.10, description: 'Canviar a LED totes les bombetes', fullDescription: '<h3>LED Lighting</h3><p>Substituir bombetes incandescents per LED genera estalvi del 75-80%. Els LED consumeixen 80% menys energia i duren 25 vegades més.</p>' },
+        { id: 'elec-sensors', name: '🚨 Sensors Moviment', reduction: 0.08, description: 'Instal·lar sensors de moviment', fullDescription: '<h3>Sensors de Moviment</h3><p>Instal·lació de sensors PIR als passadissos i espais comuns. Els llums s\'apaguen automàticament quan no hi ha activitat.</p>' },
+        { id: 'elec-ac', name: '❄️ Manteniment AC', reduction: 0.07, description: 'Fer manteniment mensual', fullDescription: '<h3>Manteniment AC</h3><p>Programa de manteniment preventiu de sistemes de climatització per millorar eficiència energètica.</p>' },
+        { id: 'elec-solar', name: '☀️ Optimitzar Panells', reduction: 0.12, description: 'Optimitzar panells solars existents', fullDescription: '<h3>Optimitzar Panells Solars</h3><p>Millorar manutenció i posicionament dels panells existents per augmentar generació fins al 100% de necessitats.</p>' }
+    ],
+    water: [
+        { id: 'water-sensors', name: '🚰 Grifos Sensor', reduction: 0.12, description: 'Instal·lar grifos amb sensor', fullDescription: '<h3>Grifos Sensor</h3><p>Grifos automàtics que detecten la presència i limiten el cabal d\'aigua. Estalvi 30-40%.</p>' },
+        { id: 'water-repairs', name: '🔧 Reparació Fuites', reduction: 0.05, description: 'Revisar i reparar fuites', fullDescription: '<h3>Reparació de Fuites</h3><p>Detecció i reparació setmanal de fuites. Una fuga pot gastar fins a 900 litres per any.</p>' },
+        { id: 'water-toilets', name: '🚽 Inodors Doble Flux', reduction: 0.09, description: 'Instal·lar inodors de doble flux', fullDescription: '<h3>Inodors Doble Flux</h3><p>Doble descàrrega (4.5L per necessitats menors, 9L per majors). Estalvi d\'aigua del 50%.</p>' },
+        { id: 'water-rain', name: '🌧️ Recollida Pluja', reduction: 0.15, description: 'Crear sistema de recollida pluja', fullDescription: '<h3>Recollida d\'Aigua de Pluja</h3><p>Sistema de cisternes per reutilitzar l\'aigua de pluja en regadius i neteja. Estalvi fins al 50%.</p>' }
+    ],
+    officeSupplies: [
+        { id: 'supplies-paperless', name: '📱 Paperless', reduction: 0.20, description: 'Implementar política paperless', fullDescription: '<h3>Política Paperless</h3><p>Transició a documentació digital. Estalvi del 60% en consumibles.</p>' },
+        { id: 'supplies-doubleside', name: '📄 Doble Cara', reduction: 0.15, description: 'Imprimir en doble cara per defecte', fullDescription: '<h3>Impressió a Doble Cara</h3><p>Configurar les impressores per imprimir per ambdós costats per defecte. Estalvi del 50% de paper.</p>' },
+        { id: 'supplies-recycled', name: '♻️ Paper Reciclat', reduction: 0.10, description: 'Usar paper reciclat', fullDescription: '<h3>Paper 100% Reciclat</h3><p>Usar paper reciclat certificat. 30% més econòmic i més sostenible.</p>' },
+        { id: 'supplies-toner', name: '🖨️ Tòners Reutilitzables', reduction: 0.20, description: 'Crear biblioteca tòners', fullDescription: '<h3>Tòners Reutilitzables</h3><p>Crear biblioteca de tòners reutilitzables. Estalvi econòmic de més del 70%.</p>' }
+    ],
+    cleaningProducts: [
+        { id: 'cleaning-eco', name: '🌿 Productes Ecològics', reduction: 0.15, description: 'Cambiar a productes ecológicos', fullDescription: '<h3>Productes Ecològics Concentrats</h3><p>100% biodegradables. Menys residus químics i més sostenibilitat ambiental. Estalvi 15%.</p>' },
+        { id: 'cleaning-microfiber', name: '🧵 Microfiber Cloths', reduction: 0.20, description: 'Usar microfiber cloths', fullDescription: '<h3>Roba de Microfibra</h3><p>Els teixits de microfibra duren més de 500 usos. Estalvi del 20% en productes de neteja.</p>' },
+        { id: 'cleaning-natural', name: '🍋 Solucions Naturals', reduction: 0.25, description: 'Preparar soluciones naturals', fullDescription: '<h3>Netejadors Naturals</h3><p>Preparacions naturals amb vinagre i aigua. Estalvi del 25% en productes químics.</p>' },
+        { id: 'cleaning-protocol', name: '⏱️ Protocol Eficient', reduction: 0.12, description: 'Implementar protocolos', fullDescription: '<h3>Protocol de Neteja Eficient</h3><p>Optimització de temps i quantitat de producte. Formació del personal en dosificació correcta. Estalvi 10%.</p>' }
+    ]
+};
+
+const prices = {
+    electricity: 0.20,
+    water: itbData.water.price_per_m3,
+    officeSupplies: 7.50,
+    cleaningProducts: 1
+};
+
+let monthlyStrategies = {
+    2026: { electricity: {}, water: {}, officeSupplies: {}, cleaningProducts: {} },
+    2027: { electricity: {}, water: {}, officeSupplies: {}, cleaningProducts: {} },
+    2028: { electricity: {}, water: {}, officeSupplies: {}, cleaningProducts: {} }
+};
+
+const months = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+
+// INICIALITZACIÓ
+document.addEventListener('DOMContentLoaded', function() {
+    loadFromLocalStorage();
+    document.getElementById('consumptionDate').valueAsDate = new Date();
+    updateDataDisplay();
+    updateForecast();
+    loadMonthlyStrategies();
+    generateActionPlan();
+});
+
+// TABS
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+    if (tabName === 'forecast') setTimeout(() => { updatePlanningDisplay(); updateForecast(); }, 100);
+    if (tabName === 'actionplan') setTimeout(() => generateActionPlan(), 100);
+}
+
+// ESTRATÈGIES
+function checkAddButton() {
+    const type = document.getElementById('consumptionType').value;
+    const value = parseFloat(document.getElementById('consumptionValue').value);
+    const date = document.getElementById('consumptionDate').value;
+    const btn = document.getElementById('addDataBtn');
+    btn.style.display = (type && value > 0 && date) ? 'block' : 'none';
+}
+
+function updateStrategiesSelect() {
+    const consumptionType = document.getElementById('consumptionType').value;
+    const strategiesContainer = document.getElementById('strategiesContainer');
+    const appliedStrategySelect = document.getElementById('appliedStrategy');
+    if (!consumptionType) {
+        strategiesContainer.style.display = 'none';
+        return;
+    }
+    strategiesContainer.style.display = 'block';
+    appliedStrategySelect.innerHTML = '<option value="">-- Cap estratègia --</option>';
+    const typeStrategies = strategies[consumptionType] || [];
+    typeStrategies.forEach(strategy => {
+        const option = document.createElement('option');
+        option.value = strategy.id;
+        option.textContent = strategy.name;
+        appliedStrategySelect.appendChild(option);
+    });
+    appliedStrategySelect.value = '';
+    displayStrategyInfo();
+}
+
+function displayStrategyInfo() {
+    const consumptionType = document.getElementById('consumptionType').value;
+    const selectedId = document.getElementById('appliedStrategy').value;
+    const strategyInfo = document.getElementById('strategyInfo');
+    if (!consumptionType || !selectedId) {
+        strategyInfo.innerHTML = '<p style="color: #999;">Selecciona una estratègia per veure els detalls</p>';
+        return;
+    }
+    const typeStrategies = strategies[consumptionType] || [];
+    const strategy = typeStrategies.find(s => s.id === selectedId);
+    if (!strategy || !strategy.description) {
+        strategyInfo.innerHTML = '';
+        return;
+    }
+    strategyInfo.innerHTML = `<h4>${strategy.name}</h4><p>${strategy.description}</p><div class="reduction-percent">Reducció esperada: ${(strategy.reduction * 100).toFixed(0)}%</div><button class="btn btn-secondary" onclick="showStrategyModal('${consumptionType}', '${strategy.id}')">Més informació</button>`;
+}
+
+function showStrategyModal(type, strategyId) {
+    const strategy = strategies[type]?.find(s => s.id === strategyId);
+    if (!strategy) return;
+    document.getElementById('strategyModalTitle').textContent = strategy.name;
+    document.getElementById('strategyModalBody').innerHTML = strategy.fullDescription;
+    document.getElementById('strategyModal').style.display = 'block';
+}
+
+function closeStrategyModal() {
+    document.getElementById('strategyModal').style.display = 'none';
+}
+
+// DADES
+function addConsumption() {
+    const type = document.getElementById('consumptionType').value;
+    const value = parseFloat(document.getElementById('consumptionValue').value);
+    const date = document.getElementById('consumptionDate').value;
+    const strategy = document.getElementById('appliedStrategy').value || '';
+    if (!type || !value || value <= 0) {
+        alert('Si us plau, completa els camps correctament');
+        return;
+    }
+    consumptionData[type].push({ date, consumption: value, strategy: strategy });
+    saveToLocalStorage();
+    updateDataDisplay();
+    generateActionPlan();
+    document.getElementById('consumptionValue').value = '';
+    document.getElementById('addDataBtn').style.display = 'none';
+    alert('✅ Dada afegida correctament!');
+}
+
+function deleteConsumption(type, index) {
+    consumptionData[type].splice(index, 1);
+    saveToLocalStorage();
+    updateDataDisplay();
+    generateActionPlan();
+}
+
+function clearAllData() {
+    if (confirm('Estàs segur?')) {
+        consumptionData = { electricity: [], water: [], officeSupplies: [], cleaningProducts: [] };
+        saveToLocalStorage();
+        updateDataDisplay();
+        generateActionPlan();
+        alert('✅ Dades eliminades');
+    }
+}
+
+function updateDataDisplay() {
+    updateTable('electricity', 'electricityTableBody', 'kWh');
+    updateTable('water', 'waterTableBody', 'm³');
+    updateTable('officeSupplies', 'suppliesTableBody', 'kg');
+    updateTable('cleaningProducts', 'cleaningTableBody', '€');
+}
+
+function updateTable(type, tableId, unit) {
+    const table = document.querySelector(`#${tableId}`);
+    table.innerHTML = '';
+    if (consumptionData[type].length === 0) {
+        table.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">Cap dada registrada</td></tr>';
+        return;
+    }
+    consumptionData[type].forEach((item, index) => {
+        const row = document.createElement('tr');
+        let strategyDisplay = '-';
+        if (item.strategy) {
+            const strategyObj = strategies[type]?.find(s => s.id === item.strategy);
+            if (strategyObj) {
+                strategyDisplay = `<a href="#" onclick="showStrategyModal('${type}', '${item.strategy}'); return false;" style="color: #667eea; text-decoration: none; cursor: pointer;">${strategyObj.name}</a>`;
+            }
+        }
+        row.innerHTML = `<td>${formatDate(item.date)}</td><td>${item.consumption} ${unit}</td><td>${strategyDisplay}</td><td><button class="btn-delete" onclick="deleteConsumption('${type}', ${index})">❌</button></td>`;
+        table.appendChild(row);
+    });
+}
+
+// PLA MENSUAL
+function updatePlanningDisplay() {
+    const year = document.getElementById('planningYear').value;
+    generatePlanningCard('electricity', year);
+    generatePlanningCard('water', year);
+    generatePlanningCard('officeSupplies', year);
+    generatePlanningCard('cleaningProducts', year);
+    updatePlanningSummary(year);
+}
+
+function generatePlanningCard(type, year) {
+    const idMap = {
+        'electricity': 'electricityPlanning',
+        'water': 'waterPlanning',
+        'officeSupplies': 'suppliesPlanning',
+        'cleaningProducts': 'cleaningPlanning'
+    };
+
+    const container = document.getElementById(idMap[type]);
+    const typeStrategies = strategies[type] || [];
+    let html = '';
+
+    months.forEach((month, index) => {
+        const monthKey = index + 1;
+        const currentStrategy = monthlyStrategies[year][type][monthKey] || '';
+        const strategyObj = typeStrategies.find(s => s.id === currentStrategy);
+        const reduction = strategyObj ? strategyObj.reduction : 0;
+
+        let optionsHtml = '<option value="">-- Cap --</option>';
+        typeStrategies.forEach(strategy => {
+            const selected = currentStrategy === strategy.id ? 'selected' : '';
+            optionsHtml += `<option value="${strategy.id}" ${selected}>${strategy.name}</option>`;
+        });
+
+        html += `
+            <div class="month-row">
+                <label>${month}</label>
+                <select onchange="setMonthlyStrategy('${type}', ${monthKey}, '${year}', this.value)">
+                    ${optionsHtml}
+                </select>
+                <div class="reduction-info">${(reduction * 100).toFixed(0)}%</div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function setMonthlyStrategy(type, month, year, strategyId) {
+    if (!monthlyStrategies[year]) {
+        monthlyStrategies[year] = { electricity: {}, water: {}, officeSupplies: {}, cleaningProducts: {} };
+    }
+    monthlyStrategies[year][type][month] = strategyId;
+    saveMonthlyStrategies();
+    updatePlanningSummary(year);
+}
+
+function updatePlanningSummary(year) {
+    const summary = document.getElementById('planningSummary');
+    let html = '';
+    const types = ['electricity', 'water', 'officeSupplies', 'cleaningProducts'];
+    const icons = { electricity: '⚡', water: '💧', officeSupplies: '📎', cleaningProducts: '🧹' };
+    const names = { electricity: 'Electricitat', water: 'Aigua', officeSupplies: 'Consumibles', cleaningProducts: 'Neteja' };
+
+    types.forEach(type => {
+        const typeStrategies = strategies[type] || [];
+        let totalReduction = 0;
+        let strategiesCount = 0;
+
+        months.forEach((month, index) => {
+            const monthKey = index + 1;
+            const strategyId = monthlyStrategies[year][type][monthKey];
+            if (strategyId) {
+                const strategy = typeStrategies.find(s => s.id === strategyId);
+                if (strategy) {
+                    totalReduction += strategy.reduction;
+                    strategiesCount++;
+                }
+            }
+        });
+
+        const avgReduction = strategiesCount > 0 ? totalReduction / strategiesCount : 0;
+        html += `<div class="summary-item"><strong>${icons[type]} ${names[type]}</strong>Estratègies: ${strategiesCount}/12<div class="value">${(avgReduction * 100).toFixed(1)}%</div></div>`;
+    });
+
+    summary.innerHTML = html;
+}
+
+function savePlanningAndUpdateForecast() {
+    saveMonthlyStrategies();
+    const year = document.getElementById('planningYear').value;
+    recalculateGrowthFactors(year);
+    updateForecast();
+    showResult('✅ Pla guardat', 'Les teves estratègies s\'han desat i les prediccions s\'han actualitzat correctament!');
+}
+
+function clearMonthlyPlan() {
+    const year = document.getElementById('planningYear').value;
+    const types = ['electricity', 'water', 'officeSupplies', 'cleaningProducts'];
+    types.forEach(type => {
+        monthlyStrategies[year][type] = {};
+    });
+    saveMonthlyStrategies();
+    updatePlanningDisplay();
+    recalculateGrowthFactors(year);
+    updateForecast();
+    showResult('🗑️ Pla esborrat', `Totes les estratègies del ${year} s'han eliminat correctament.`);
+}
+
+function recalculateGrowthFactors(year) {
+    const types = ['electricity', 'water', 'officeSupplies', 'cleaningProducts'];
+    let totalReductionPercentage = 0;
+
+    types.forEach(type => {
+        const typeStrategies = strategies[type] || [];
+        let totalReduction = 0;
+        let strategiesCount = 0;
+
+        months.forEach((month, index) => {
+            const monthKey = index + 1;
+            const strategyId = monthlyStrategies[year][type][monthKey];
+            if (strategyId) {
+                const strategy = typeStrategies.find(s => s.id === strategyId);
+                if (strategy) {
+                    totalReduction += strategy.reduction;
+                    strategiesCount++;
+                }
+            }
+        });
+
+        const avgReduction = strategiesCount > 0 ? totalReduction / strategiesCount : 0;
+        totalReductionPercentage += avgReduction;
+    });
+
+    const avgReduction = totalReductionPercentage / types.length;
+    yearGrowthFactors[year] = 1 - avgReduction;
+}
+
+function saveMonthlyStrategies() {
+    localStorage.setItem('monthlyStrategies', JSON.stringify(monthlyStrategies));
+}
+
+function loadMonthlyStrategies() {
+    const saved = localStorage.getItem('monthlyStrategies');
+    if (saved) {
+        monthlyStrategies = JSON.parse(saved);
+    }
+}
+
+// PREDICCIÓ
+function getYearForecastDescription(year) {
+    const descriptions = {
+        2026: '📊 Predicció 2026 (Any base - sense canvis)',
+        2027: '📊 Predicció 2027 (Amb implementació inicial -5%)',
+        2028: '📊 Predicció 2028 (Amb estratègies consolidades -10%)'
+    };
+    return descriptions[year] || descriptions[2026];
+}
+
+function getMonthlyStrategyReduction(type, monthIndex, year) {
+    const monthKey = monthIndex + 1;
+    const strategyId = monthlyStrategies[year] && monthlyStrategies[year][type] ? monthlyStrategies[year][type][monthKey] : '';
+    if (!strategyId) return 0;
+    const strategy = strategies[type]?.find(s => s.id === strategyId);
+    return strategy ? strategy.reduction : 0;
+}
+
+function updateForecast() {
+    const year = document.getElementById('forecastYear').value;
+    document.getElementById('forecastInfo').innerHTML = getYearForecastDescription(year);
+    generateElectricityForecast(year);
+    generateWaterForecast(year);
+    generateSuppliesForecast(year);
+    generateCleaningForecast(year);
+}
+
+function generateElectricityForecast(year) {
+    const baseConsumption = itbData.electricity.base_monthly;
+    const growthFactor = yearGrowthFactors[year] || 1.00;
+    const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+
+    const data = seasonalFactors.electricity.map((factor, index) => {
+        const monthlyReduction = getMonthlyStrategyReduction('electricity', index, year);
+        const baseValue = baseConsumption * factor * growthFactor;
+        const reducedValue = baseValue * (1 - monthlyReduction);
+        return Math.round(reducedValue * 100) / 100;
+    });
+
+    const avgConsumption = Math.round(data.reduce((a, b) => a + b) / data.length * 100) / 100;
+    document.getElementById('elecAvg').textContent = avgConsumption;
+
+    const ctx = document.getElementById('electricityChart').getContext('2d');
+    if (window.electricityChartInstance) window.electricityChartInstance.destroy();
+
+    window.electricityChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months_labels,
+            datasets: [{
+                label: `Consum (kWh) - ${year}`,
+                data: data,
+                borderColor: '#f093fb',
+                backgroundColor: 'rgba(240, 147, 251, 0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointBackgroundColor: '#f093fb',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: true } },
+            scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + ' kWh'; } } } }
+        }
+    });
+}
+
+function generateWaterForecast(year) {
+    const baseConsumption = itbData.water.monthly_average;
+    const growthFactor = yearGrowthFactors[year] || 1.00;
+    const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+
+    const data = seasonalFactors.water.map((factor, index) => {
+        const monthlyReduction = getMonthlyStrategyReduction('water', index, year);
+        const baseValue = baseConsumption * factor * growthFactor;
+        const reducedValue = baseValue * (1 - monthlyReduction);
+        return Math.round(reducedValue * 100) / 100;
+    });
+
+    const avgConsumption = Math.round(data.reduce((a, b) => a + b) / data.length * 100) / 100;
+    document.getElementById('waterAvg').textContent = avgConsumption;
+
+    const ctx = document.getElementById('waterChart').getContext('2d');
+    if (window.waterChartInstance) window.waterChartInstance.destroy();
+
+    window.waterChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months_labels,
+            datasets: [{
+                label: `Consum (m³) - ${year}`,
+                data: data,
+                borderColor: '#4facfe',
+                backgroundColor: 'rgba(79, 172, 254, 0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointBackgroundColor: '#4facfe',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: true } },
+            scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + ' m³'; } } } }
+        }
+    });
+}
+
+function generateSuppliesForecast(year) {
+    const baseConsumption = itbData.officeSupplies.paper_a4_monthly;
+    const growthFactor = yearGrowthFactors[year] || 1.00;
+    const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+
+    const data = seasonalFactors.officeSupplies.map((factor, index) => {
+        const monthlyReduction = getMonthlyStrategyReduction('officeSupplies', index, year);
+        const baseValue = baseConsumption * factor * growthFactor;
+        const reducedValue = baseValue * (1 - monthlyReduction);
+        return Math.round(reducedValue * 10) / 10;
+    });
+
+    const avgConsumption = Math.round(data.reduce((a, b) => a + b) / data.length * 10) / 10;
+    document.getElementById('suppliesAvg').textContent = avgConsumption;
+
+    const ctx = document.getElementById('suppliesChart').getContext('2d');
+    if (window.suppliesChartInstance) window.suppliesChartInstance.destroy();
+
+    window.suppliesChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: months_labels,
+            datasets: [{
+                label: `Consum (paquets) - ${year}`,
+                data: data,
+                backgroundColor: ['#fa709a', '#fa709a', '#fa709a', '#fa709a', '#fa709a', '#fee140', '#fee140', '#fee140', '#fa709a', '#fa709a', '#fa709a', '#fa709a'],
+                borderColor: '#fa709a',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: true } },
+            scales: { y: { beginAtZero: true, ticks: { callback: function(value) { return value + ' paq'; } } } }
+        }
+    });
+}
+
+function generateCleaningForecast(year) {
+    const baseConsumption = itbData.cleaningProducts.monthly_cost;
+    const growthFactor = yearGrowthFactors[year] || 1.00;
+    const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
+
+    const data = seasonalFactors.cleaningProducts.map((factor, index) => {
+        const monthlyReduction = getMonthlyStrategyReduction('cleaningProducts', index, year);
+        const baseValue = baseConsumption * factor * growthFactor;
+        const reducedValue = baseValue * (1 - monthlyReduction);
+        return Math.round(reducedValue * 100) / 100;
+    });
+
+    const avgConsumption = Math.round(data.reduce((a, b) => a + b) / data.length * 100) / 100;
+    document.getElementById('cleaningAvg').textContent = avgConsumption;
+
+    const ctx = document.getElementById('cleaningChart').getContext('2d');
+    if (window.cleaningChartInstance) window.cleaningChartInstance.destroy();
+
+    window.cleaningChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: months_labels,
+            datasets: [{
+                label: `Cost (€) - ${year}`,
+                data: data,
+                borderColor: '#30cfd0',
+                backgroundColor: 'rgba(48, 207, 208, 0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointBackgroundColor: '#30cfd0',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: true } },
+            scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + '€'; } } } }
+        }
+    });
+}
+
+// PLA 3 ANYS
+function generateActionPlan() {
+    const container = document.getElementById('actionPlanContent');
+
+    if (!hasConsumptionData()) {
+        container.innerHTML = `<div class="no-data-message">
+            <p>❌ No hi ha dades registrades.</p>
+            <p>Registra dades de consum al tab "Calculadora" per veure el pla d'accions.</p>
+        </div>`;
+        return;
+    }
+
+    let html = '';
+    const types = ['electricity', 'water', 'officeSupplies', 'cleaningProducts'];
+    const icons = { electricity: '⚡', water: '💧', officeSupplies: '📎', cleaningProducts: '🧹' };
+    const names = { electricity: 'Electricitat', water: 'Aigua', officeSupplies: 'Consumibles', cleaningProducts: 'Neteja' };
+    const units = { electricity: 'kWh', water: 'm³', officeSupplies: 'kg', cleaningProducts: '€' };
+
+    html += `<div class="actionplan-summary-box">
+        <h3>📊 Consum Actual (Mitjana Registrada)</h3>
+        <div class="actionplan-grid">`;
+
+    types.forEach(type => {
+        const data = consumptionData[type];
+        if (data.length > 0) {
+            const avg = data.reduce((a, b) => a + b.consumption, 0) / data.length;
+            const target = avg * 0.70;
+            const saving = avg - target;
+
+            html += `
+                <div class="actionplan-card">
+                    <div class="actionplan-card-header">
+                        <h4>${icons[type]} ${names[type]}</h4>
+                    </div>
+                    <div class="actionplan-card-body">
+                        <div class="actionplan-metric">
+                            <span class="label">Actual:</span>
+                            <span class="value">${avg.toFixed(2)} ${units[type]}</span>
+                        </div>
+                        <div class="actionplan-metric">
+                            <span class="label">Objectiu (30% ↓):</span>
+                            <span class="value target">${target.toFixed(2)} ${units[type]}</span>
+                        </div>
+                        <div class="actionplan-metric">
+                            <span class="label">Estalvi necessari:</span>
+                            <span class="value saving">${saving.toFixed(2)} ${units[type]}</span>
+                        </div>
+                        <div class="actionplan-metric">
+                            <span class="label">Estalvi anual:</span>
+                            <span class="value savings-money">${(saving * 12 * prices[type]).toFixed(2)}€</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    });
+
+    html += `</div></div>`;
+
+    html += `<div class="actionplan-timeline">
+        <h3>📅 Timeline d'Implementació (3 Anys)</h3>
+        <div class="timeline">`;
+
+    const years = [
+        {
+            year: 2026,
+            title: 'ANY 1: Planificació i Primeres Accions',
+            reduction: 0.10,
+            actions: [
+                '🔦 Canviar a LED (10% estalvi electricitat)',
+                '🚰 Instal·lar grifos sensor (12% estalvi aigua)',
+                '📱 Iniciar política paperless (20% estalvi consumibles)',
+                '🌿 Productos ecológicos de neteja (15% estalvi)'
+            ]
+        },
+        {
+            year: 2027,
+            title: 'ANY 2: Expansió de Mesures',
+            reduction: 0.20,
+            actions: [
+                '🚨 Instal·lar sensors de moviment (8% estalvi electricitat)',
+                '🚽 Instal·lar inodors doble flux (9% estalvi aigua)',
+                '📄 Imprimir doble cara per defecte (15% estalvi consumibles)',
+                '🧵 Microfiber cloths per neteja (20% estalvi)'
+            ]
+        },
+        {
+            year: 2028,
+            title: 'ANY 3: Consolidació i Objectius Finals',
+            reduction: 0.30,
+            actions: [
+                '☀️ Optimitzar panells solars (12% estalvi electricitat)',
+                '🌧️ Sistema recollida aigua de pluja (15% estalvi aigua)',
+                '🖨️ Biblioteca tòners reutilitzables (20% estalvi consumibles)',
+                '🍋 Solucions naturals de neteja consolidat (25% estalvi)'
+            ]
+        }
+    ];
+
+    years.forEach((yearPlan, index) => {
+        html += `
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <span class="timeline-year">${yearPlan.year}</span>
+                    <span class="timeline-reduction">${(yearPlan.reduction * 100).toFixed(0)}% ↓</span>
+                </div>
+                <div class="timeline-content">
+                    <h4>${yearPlan.title}</h4>
+                    <ul class="actions-list">
+                        ${yearPlan.actions.map(action => `<li>${action}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `</div></div>`;
+
+    html += `<div class="actionplan-savings-box">
+        <h3>💰 Estimació d'Estalvi Total a 3 Anys</h3>
+        <div class="savings-grid">`;
+
+    let totalSavingsYear1 = 0, totalSavingsYear2 = 0, totalSavingsYear3 = 0;
+
+    types.forEach(type => {
+        const data = consumptionData[type];
+        if (data.length > 0) {
+            const avg = data.reduce((a, b) => a + b.consumption, 0) / data.length;
+            const price = prices[type];
+
+            const year1 = (avg * 0.10) * 12 * price;
+            const year2 = (avg * 0.20) * 12 * price;
+            const year3 = (avg * 0.30) * 12 * price;
+
+            totalSavingsYear1 += year1;
+            totalSavingsYear2 += year2;
+            totalSavingsYear3 += year3;
+
+            html += `
+                <div class="savings-card">
+                    <h4>${icons[type]} ${names[type]}</h4>
+                    <div class="savings-item">
+                        <span class="year-label">2026:</span>
+                        <span class="savings-amount">${year1.toFixed(2)}€</span>
+                    </div>
+                    <div class="savings-item">
+                        <span class="year-label">2027:</span>
+                        <span class="savings-amount">${year2.toFixed(2)}€</span>
+                    </div>
+                    <div class="savings-item">
+                        <span class="year-label">2028:</span>
+                        <span class="savings-amount">${year3.toFixed(2)}€</span>
+                    </div>
+                    <div class="savings-item total">
+                        <span class="year-label"><strong>TOTAL:</strong></span>
+                        <span class="savings-amount"><strong>${(year1 + year2 + year3).toFixed(2)}€</strong></span>
+                    </div>
+                </div>
+            `;
+        }
+    });
+
+    html += `
+        </div>
+        <div class="total-savings-summary">
+            <h3>🎉 Estalvi Total Acumulat a 3 Anys</h3>
+            <div class="big-number">${(totalSavingsYear1 + totalSavingsYear2 + totalSavingsYear3).toFixed(2)}€</div>
+            <p>Invertint en aquestes estratègies, estalviaràs aquest import en 3 anys.</p>
+        </div>
+    </div>`;
+
+    container.innerHTML = html;
+}
+
+function hasConsumptionData() {
+    return consumptionData.electricity.length > 0 ||
+           consumptionData.water.length > 0 ||
+           consumptionData.officeSupplies.length > 0 ||
+           consumptionData.cleaningProducts.length > 0;
+}
+
+// CÀLCULS
+function calculateElectricityYear() {
+    const data = consumptionData.electricity;
+    if (data.length === 0) { showResult('⚡ Electricitat', 'No hi ha dades'); return; }
+    const avg = data.reduce((a, b) => a + b.consumption, 0) / data.length;
+    const reduction = getAverageReduction('electricity', data);
+    const avgOptimized = avg * (1 - reduction);
+    const cost = avg * 12 * prices.electricity;
+    const costOptimized = avgOptimized * 12 * prices.electricity;
+    const savings = cost - costOptimized;
+    let strategiesUsed = '';
+    data.forEach(item => {
+        if (item.strategy) {
+            const strategy = strategies.electricity.find(s => s.id === item.strategy);
+            if (strategy) strategiesUsed += `<li>${strategy.name} (${(strategy.reduction*100).toFixed(0)}%)</li>`;
+        }
+    });
+    showResult('⚡ Electricitat - Any', `<div class="result-item"><strong>Promig actual:</strong> ${avg.toFixed(2)} kWh/mes</div><div class="result-item"><strong>Promig optimitzat:</strong> ${avgOptimized.toFixed(2)} kWh/mes</div><div class="result-item"><strong>Reducció mitjana:</strong> ${(reduction*100).toFixed(1)}%</div><div class="result-item"><strong>Cost anual actual:</strong> ${cost.toFixed(2)}€</div><div class="result-item"><strong>Cost anual optimitzat:</strong> ${costOptimized.toFixed(2)}€</div><div class="result-item"><strong>💰 Estalvi anual:</strong> ${savings.toFixed(2)}€</div>${strategiesUsed ? `<div class="result-item"><strong>Estratègies aplicades:</strong><ul>${strategiesUsed}</ul></div>` : ''}`);
+}
+
+function calculateElectricitySchoolYear() {
+    const schoolMonths = [9, 10, 11, 12, 1, 2, 3, 4, 5, 6];
+    const filtered = consumptionData.electricity.filter(d => schoolMonths.includes(new Date(d.date).getMonth() + 1));
+    if (filtered.length === 0) { showResult('⚡ Electricitat', 'No hi ha dades'); return; }
+    const total = filtered.reduce((a, b) => a + b.consumption, 0);
+    const reduction = getAverageReduction('electricity', filtered);
+    const totalOptimized = total * (1 - reduction);
+    const cost = total * prices.electricity;
+    const costOptimized = totalOptimized * prices.electricity;
+    showResult('⚡ Electricitat Set-Juny', `<div class="result-item"><strong>Total actual:</strong> ${total.toFixed(2)} kWh</div><div class="result-item"><strong>Total optimitzat:</strong> ${totalOptimized.toFixed(2)} kWh</div><div class="result-item"><strong>Reducció:</strong> ${(reduction*100).toFixed(1)}%</div><div class="result-item"><strong>Cost actual:</strong> ${cost.toFixed(2)}€</div><div class="result-item"><strong>Cost optimitzat:</strong> ${costOptimized.toFixed(2)}€</div><div class="result-item"><strong>💰 Estalvi:</strong> ${(cost - costOptimized).toFixed(2)}€</div>`);
+}
+
+function calculateWaterYear() {
+    const data = consumptionData.water;
+    if (data.length === 0) { showResult('💧 Aigua', 'No hi ha dades'); return; }
+    const avg = data.reduce((a, b) => a + b.consumption, 0) / data.length;
+    const reduction = getAverageReduction('water', data);
+    const avgOptimized = avg * (1 - reduction);
+    const cost = avg * 12 * prices.water;
+    const costOptimized = avgOptimized * 12 * prices.water;
+    const savings = cost - costOptimized;
+    let strategiesUsed = '';
+    data.forEach(item => {
+        if (item.strategy) {
+            const strategy = strategies.water.find(s => s.id === item.strategy);
+            if (strategy) strategiesUsed += `<li>${strategy.name} (${(strategy.reduction*100).toFixed(0)}%)</li>`;
+        }
+    });
+    showResult('💧 Aigua - Any', `<div class="result-item"><strong>Promig actual:</strong> ${avg.toFixed(2)} m³/mes</div><div class="result-item"><strong>Promig optimitzat:</strong> ${avgOptimized.toFixed(2)} m³/mes</div><div class="result-item"><strong>Reducció mitjana:</strong> ${(reduction*100).toFixed(1)}%</div><div class="result-item"><strong>Cost anual actual:</strong> ${cost.toFixed(2)}€</div><div class="result-item"><strong>Cost anual optimitzat:</strong> ${costOptimized.toFixed(2)}€</div><div class="result-item"><strong>💰 Estalvi anual:</strong> ${savings.toFixed(2)}€</div>${strategiesUsed ? `<div class="result-item"><strong>Estratègies aplicades:</strong><ul>${strategiesUsed}</ul></div>` : ''}`);
+}
+
+function calculateWaterSchoolYear() {
+    const schoolMonths = [9, 10, 11, 12, 1, 2, 3, 4, 5, 6];
+    const filtered = consumptionData.water.filter(d => schoolMonths.includes(new Date(d.date).getMonth() + 1));
+    if (filtered.length === 0) { showResult('💧 Aigua', 'No hi ha dades'); return; }
+    const total = filtered.reduce((a, b) => a + b.consumption, 0);
+    const reduction = getAverageReduction('water', filtered);
+    const totalOptimized = total * (1 - reduction);
+    const cost = total * prices.water;
+    const costOptimized = totalOptimized * prices.water;
+    showResult('💧 Aigua Set-Juny', `<div class="result-item"><strong>Total actual:</strong> ${total.toFixed(2)} m³</div><div class="result-item"><strong>Total optimitzat:</strong> ${totalOptimized.toFixed(2)} m³</div><div class="result-item"><strong>Reducció:</strong> ${(reduction*100).toFixed(1)}%</div><div class="result-item"><strong>Cost actual:</strong> ${cost.toFixed(2)}€</div><div class="result-item"><strong>Cost optimitzat:</strong> ${costOptimized.toFixed(2)}€</div><div class="result-item"><strong>💰 Estalvi:</strong> ${(cost - costOptimized).toFixed(2)}€</div>`);
+}
+
+function calculateSuppliesYear() {
+    const data = consumptionData.officeSupplies;
+    if (data.length === 0) { showResult('📎 Consumibles', 'No hi ha dades'); return; }
+    const avg = data.reduce((a, b) => a + b.consumption, 0) / data.length;
+    const reduction = getAverageReduction('officeSupplies', data);
+    const avgOptimized = avg * (1 - reduction);
+    const cost = avg * 12 * prices.officeSupplies;
+    const costOptimized = avgOptimized * 12 * prices.officeSupplies;
+    const savings = cost - costOptimized;
+    let strategiesUsed = '';
+    data.forEach(item => {
+        if (item.strategy) {
+            const strategy = strategies.officeSupplies.find(s => s.id === item.strategy);
+            if (strategy) strategiesUsed += `<li>${strategy.name} (${(strategy.reduction*100).toFixed(0)}%)</li>`;
+        }
+    });
+    showResult('📎 Consumibles - Any', `<div class="result-item"><strong>Promig actual:</strong> ${avg.toFixed(2)} kg/mes</div><div class="result-item"><strong>Promig optimitzat:</strong> ${avgOptimized.toFixed(2)} kg/mes</div><div class="result-item"><strong>Reducció mitjana:</strong> ${(reduction*100).toFixed(1)}%</div><div class="result-item"><strong>Cost anual actual:</strong> ${cost.toFixed(2)}€</div><div class="result-item"><strong>Cost anual optimitzat:</strong> ${costOptimized.toFixed(2)}€</div><div class="result-item"><strong>💰 Estalvi anual:</strong> ${savings.toFixed(2)}€</div>${strategiesUsed ? `<div class="result-item"><strong>Estratègies aplicades:</strong><ul>${strategiesUsed}</ul></div>` : ''}`);
+}
+
+function calculateSuppliesSchoolYear() {
+    const schoolMonths = [9, 10, 11, 12, 1, 2, 3, 4, 5, 6];
+    const filtered = consumptionData.officeSupplies.filter(d => schoolMonths.includes(new Date(d.date).getMonth() + 1));
+    if (filtered.length === 0) { showResult('📎 Consumibles', 'No hi ha dades'); return; }
+    const total = filtered.reduce((a, b) => a + b.consumption, 0);
+    const reduction = getAverageReduction('officeSupplies', filtered);
+    const totalOptimized = total * (1 - reduction);
+    const cost = total * prices.officeSupplies;
+    const costOptimized = totalOptimized * prices.officeSupplies;
+    showResult('📎 Consumibles Set-Juny', `<div class="result-item"><strong>Total actual:</strong> ${total.toFixed(2)} kg</div><div class="result-item"><strong>Total optimitzat:</strong> ${totalOptimized.toFixed(2)} kg</div><div class="result-item"><strong>Reducció:</strong> ${(reduction*100).toFixed(1)}%</div><div class="result-item"><strong>Cost actual:</strong> ${cost.toFixed(2)}€</div><div class="result-item"><strong>Cost optimitzat:</strong> ${costOptimized.toFixed(2)}€</div><div class="result-item"><strong>💰 Estalvi:</strong> ${(cost - costOptimized).toFixed(2)}€</div>`);
+}
+
+function calculateCleaningYear() {
+    const data = consumptionData.cleaningProducts;
+    if (data.length === 0) { showResult('🧹 Neteja', 'No hi ha dades'); return; }
+    const avg = data.reduce((a, b) => a + b.consumption, 0) / data.length;
+    const reduction = getAverageReduction('cleaningProducts', data);
+    const avgOptimized = avg * (1 - reduction);
+    const cost = avg * 12;
+    const costOptimized = avgOptimized * 12;
+    const savings = cost - costOptimized;
+    let strategiesUsed = '';
+    data.forEach(item => {
+        if (item.strategy) {
+            const strategy = strategies.cleaningProducts.find(s => s.id === item.strategy);
+            if (strategy) strategiesUsed += `<li>${strategy.name} (${(strategy.reduction*100).toFixed(0)}%)</li>`;
+        }
+    });
+    showResult('🧹 Neteja - Any', `<div class="result-item"><strong>Cost mensual actual:</strong> ${avg.toFixed(2)}€/mes</div><div class="result-item"><strong>Cost mensual optimitzat:</strong> ${avgOptimized.toFixed(2)}€/mes</div><div class="result-item"><strong>Reducció mitjana:</strong> ${(reduction*100).toFixed(1)}%</div><div class="result-item"><strong>Cost anual actual:</strong> ${cost.toFixed(2)}€</div><div class="result-item"><strong>Cost anual optimitzat:</strong> ${costOptimized.toFixed(2)}€</div><div class="result-item"><strong>💰 Estalvi anual:</strong> ${savings.toFixed(2)}€</div>${strategiesUsed ? `<div class="result-item"><strong>Estratègies aplicades:</strong><ul>${strategiesUsed}</ul></div>` : ''}`);
+}
+
+function calculateCleaningSchoolYear() {
+    const schoolMonths = [9, 10, 11, 12, 1, 2, 3, 4, 5, 6];
+    const filtered = consumptionData.cleaningProducts.filter(d => schoolMonths.includes(new Date(d.date).getMonth() + 1));
+    if (filtered.length === 0) { showResult('🧹 Neteja', 'No hi ha dades'); return; }
+    const total = filtered.reduce((a, b) => a + b.consumption, 0);
+    const reduction = getAverageReduction('cleaningProducts', filtered);
+    const totalOptimized = total * (1 - reduction);
+    showResult('🧹 Neteja Set-Juny', `<div class="result-item"><strong>Cost total actual:</strong> ${total.toFixed(2)}€</div><div class="result-item"><strong>Cost total optimitzat:</strong> ${totalOptimized.toFixed(2)}€</div><div class="result-item"><strong>Reducció:</strong> ${(reduction*100).toFixed(1)}%</div><div class="result-item"><strong>💰 Estalvi:</strong> ${(total - totalOptimized).toFixed(2)}€</div>`);
+}
+
+function getAverageReduction(type, data) {
+    if (data.length === 0) return 0;
+    let totalReduction = 0;
+    data.forEach(item => {
+        if (item.strategy) {
+            const strategy = strategies[type]?.find(s => s.id === item.strategy);
+            if (strategy) totalReduction += strategy.reduction;
+        }
+    });
+    return totalReduction / data.length;
+}
+
+function generateFullReport() {
+    let html = '<div style="max-height: 500px; overflow-y: auto;">';
+    const elecData = consumptionData.electricity;
+    if (elecData.length > 0) {
+        const elecAvg = elecData.reduce((a, b) => a + b.consumption, 0) / elecData.length;
+        const elecReduction = getAverageReduction('electricity', elecData);
+        const elecOptimized = elecAvg * (1 - elecReduction);
+        html += `<div class="result-item"><strong>⚡ Electricitat</strong><br>Actual: ${elecAvg.toFixed(2)} kWh/mes | Optimitzat: ${elecOptimized.toFixed(2)} kWh/mes<br>Reducció: ${(elecReduction*100).toFixed(1)}%</div>`;
+    }
+    const waterData = consumptionData.water;
+    if (waterData.length > 0) {
+        const waterAvg = waterData.reduce((a, b) => a + b.consumption, 0) / waterData.length;
+        const waterReduction = getAverageReduction('water', waterData);
+        const waterOptimized = waterAvg * (1 - waterReduction);
+        html += `<div class="result-item"><strong>💧 Aigua</strong><br>Actual: ${waterAvg.toFixed(2)} m³/mes | Optimitzat: ${waterOptimized.toFixed(2)} m³/mes<br>Reducció: ${(waterReduction*100).toFixed(1)}%</div>`;
+    }
+    const suppliesData = consumptionData.officeSupplies;
+    if (suppliesData.length > 0) {
+        const suppliesAvg = suppliesData.reduce((a, b) => a + b.consumption, 0) / suppliesData.length;
+        const suppliesReduction = getAverageReduction('officeSupplies', suppliesData);
+        const suppliesOptimized = suppliesAvg * (1 - suppliesReduction);
+        html += `<div class="result-item"><strong>📎 Consumibles</strong><br>Actual: ${suppliesAvg.toFixed(2)} kg/mes | Optimitzat: ${suppliesOptimized.toFixed(2)} kg/mes<br>Reducció: ${(suppliesReduction*100).toFixed(1)}%</div>`;
+    }
+    const cleaningData = consumptionData.cleaningProducts;
+    if (cleaningData.length > 0) {
+        const cleaningAvg = cleaningData.reduce((a, b) => a + b.consumption, 0) / cleaningData.length;
+        const cleaningReduction = getAverageReduction('cleaningProducts', cleaningData);
+        const cleaningOptimized = cleaningAvg * (1 - cleaningReduction);
+        html += `<div class="result-item"><strong>🧹 Neteja</strong><br>Actual: ${cleaningAvg.toFixed(2)}€/mes | Optimitzat: ${cleaningOptimized.toFixed(2)}€/mes<br>Reducció: ${(cleaningReduction*100).toFixed(1)}%</div>`;
+    }
+    html += '</div>';
+    if (html === '<div style="max-height: 500px; overflow-y: auto;"></div>') {
+        showResult('📄 Informe', 'No hi ha dades');
+    } else {
+        showResult('📄 Informe Complet', html);
+    }
+}
+
+// UTILITATS
+function showResult(title, content) {
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultBody').innerHTML = content;
+    document.getElementById('resultModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('resultModal').style.display = 'none';
+}
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('ca-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function saveToLocalStorage() {
+    localStorage.setItem('consumptionData', JSON.stringify(consumptionData));
+}
+
+function loadFromLocalStorage() {
+    const saved = localStorage.getItem('consumptionData');
+    if (saved) {
+        consumptionData = JSON.parse(saved);
+    }
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('resultModal');
+    const strategyModal = document.getElementById('strategyModal');
+    if (event.target === modal) modal.style.display = 'none';
+    if (event.target === strategyModal) strategyModal.style.display = 'none';
+}
+    </script>
 </body>
 </html>
