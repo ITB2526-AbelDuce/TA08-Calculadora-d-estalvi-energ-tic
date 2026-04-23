@@ -28,7 +28,7 @@
 
                     <div class="input-group">
                         <label for="consumptionType">Tipus de consum:</label>
-                        <select id="consumptionType" onchange="updateStrategiesSelect()">
+                        <select id="consumptionType" onchange="updateStrategiesSelect(); checkAddButton()">
                             <option value="">-- Selecciona un tipus --</option>
                             <option value="electricity">⚡ Electricitat (kWh)</option>
                             <option value="water">💧 Aigua (m³)</option>
@@ -49,15 +49,15 @@
 
                     <div class="input-group">
                         <label for="consumptionValue">Valor de consum:</label>
-                        <input type="number" id="consumptionValue" placeholder="Introduïx la quantitat" min="0" step="0.01">
+                        <input type="number" id="consumptionValue" placeholder="Introduïx la quantitat" min="0" step="0.01" oninput="checkAddButton()">
                     </div>
 
                     <div class="input-group">
                         <label for="consumptionDate">Data:</label>
-                        <input type="date" id="consumptionDate">
+                        <input type="date" id="consumptionDate" onchange="checkAddButton()">
                     </div>
 
-                    <button class="btn btn-primary" onclick="addConsumption()">➕ Afegir dada</button>
+                    <button class="btn btn-primary" id="addDataBtn" onclick="addConsumption()" style="display:none;">➕ Afegir dada</button>
                 </section>
 
                 <section class="calculations-section">
