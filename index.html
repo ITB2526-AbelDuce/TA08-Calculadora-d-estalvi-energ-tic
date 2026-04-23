@@ -310,7 +310,7 @@ section h2 {
 /* ── DATA TABLES ────────────────────────────────────────────── */
 .data-tables {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     margin-bottom: 28px;
 }
@@ -1029,6 +1029,101 @@ section h2 {
 ::-webkit-scrollbar-track { background: var(--surface-2); border-radius: 8px; }
 ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+/* ── CONFIRM DIALOG ─────────────────────────────────────────── */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,26,24,0.5);
+    backdrop-filter: blur(2px);
+    z-index: 9998;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirm-overlay.confirm-show {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+}
+
+.confirm-box {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 28px 32px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+    min-width: 280px;
+    max-width: 360px;
+    text-align: center;
+    animation: slideDown 0.2s ease-out;
+}
+
+.confirm-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15em;
+    color: var(--text-1);
+    margin-bottom: 8px;
+}
+
+.confirm-subtitle {
+    font-size: 0.88em;
+    color: var(--text-3);
+    margin-bottom: 24px;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.confirm-cancel {
+    background: var(--surface-2);
+    color: var(--text-2);
+    border: 1.5px solid var(--border);
+    padding: 10px 22px;
+    width: auto;
+}
+
+.confirm-cancel:hover {
+    background: var(--border);
+}
+
+.confirm-ok {
+    padding: 10px 22px;
+    width: auto;
+    margin-top: 0;
+}
+
+/* ── TOAST ──────────────────────────────────────────────────── */
+.toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    background: var(--primary-dk);
+    color: white;
+    padding: 16px 28px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.97em;
+    font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+}
+
+.toast.toast-error {
+    background: var(--danger);
+}
+
+.toast.toast-show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
     </style>
 </head>
     <div class="container">
@@ -1116,7 +1211,7 @@ section h2 {
                     <button class="btn btn-success" onclick="generateFullReport()">📄 Generar informe complet</button>
                 </section>
 
-                <section class="data-display-section">
+                <section class="data-display-section" id="dataDisplaySection">
                     <h2>📋 Dades registrades</h2>
                     <div class="data-tables">
                         <div class="data-table">
@@ -1180,7 +1275,7 @@ section h2 {
                         </div>
                     </div>
 
-                    <button class="btn btn-danger" onclick="clearAllData()">🗑️ Buidar totes les dades</button>
+                    <button class="btn btn-danger" id="clearAllBtn" onclick="clearAllData()">🗑️ Buidar totes les dades</button>
                 </section>
             </div>
 
@@ -1492,6 +1587,21 @@ section h2 {
         </div>
     </div>
 
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast"></div>
+
+    <!-- CONFIRM DIALOG -->
+    <div id="confirmOverlay" class="confirm-overlay">
+        <div class="confirm-box">
+            <p class="confirm-title" id="confirmTitle"></p>
+            <p class="confirm-subtitle" id="confirmSubtitle"></p>
+            <div class="confirm-buttons">
+                <button class="btn confirm-cancel" onclick="closeConfirm()">Cancel·lar</button>
+                <button class="btn confirm-ok btn-danger" id="confirmOkBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
 // DADES GLOBALS
@@ -1674,7 +1784,7 @@ function addConsumption() {
     const date = document.getElementById('consumptionDate').value;
     const strategy = document.getElementById('appliedStrategy').value || '';
     if (!type || !value || value <= 0) {
-        alert('Si us plau, completa els camps correctament');
+        showToast('Si us plau, completa els camps correctament', 'error');
         return;
     }
     consumptionData[type].push({ date, consumption: value, strategy: strategy });
@@ -1683,7 +1793,7 @@ function addConsumption() {
     generateActionPlan();
     document.getElementById('consumptionValue').value = '';
     document.getElementById('addDataBtn').style.display = 'none';
-    alert('✅ Dada afegida correctament!');
+    showToast('✅ Dada afegida correctament!');
 }
 
 function deleteConsumption(type, index) {
@@ -1694,13 +1804,13 @@ function deleteConsumption(type, index) {
 }
 
 function clearAllData() {
-    if (confirm('Estàs segur?')) {
+    showConfirm('Buidar totes les dades?', 'Aquesta acció no es pot desfer.', () => {
         consumptionData = { electricity: [], water: [], officeSupplies: [], cleaningProducts: [] };
         saveToLocalStorage();
         updateDataDisplay();
         generateActionPlan();
-        alert('✅ Dades eliminades');
-    }
+        showToast('✅ Dades eliminades');
+    });
 }
 
 function updateDataDisplay() {
@@ -1708,6 +1818,13 @@ function updateDataDisplay() {
     updateTable('water', 'waterTableBody', 'm³');
     updateTable('officeSupplies', 'suppliesTableBody', 'kg');
     updateTable('cleaningProducts', 'cleaningTableBody', '€');
+
+    const hasData = ['electricity', 'water', 'officeSupplies', 'cleaningProducts']
+        .some(t => consumptionData[t].length > 0);
+    const section = document.getElementById('dataDisplaySection');
+    const btn = document.getElementById('clearAllBtn');
+    if (section) section.style.display = hasData ? '' : 'none';
+    if (btn) btn.style.display = hasData ? '' : 'none';
 }
 
 function updateTable(type, tableId, unit) {
@@ -2460,6 +2577,30 @@ function loadFromLocalStorage() {
     if (saved) {
         consumptionData = JSON.parse(saved);
     }
+}
+
+function showConfirm(title, subtitle, onOk) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmSubtitle').textContent = subtitle;
+    const overlay = document.getElementById('confirmOverlay');
+    overlay.classList.add('confirm-show');
+    const okBtn = document.getElementById('confirmOkBtn');
+    okBtn.onclick = () => { closeConfirm(); onOk(); };
+}
+
+function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('confirm-show');
+}
+
+function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast' + (type === 'error' ? ' toast-error' : '');
+    toast.classList.add('toast-show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => {
+        toast.classList.remove('toast-show');
+    }, 2200);
 }
 
 window.onclick = function(event) {
