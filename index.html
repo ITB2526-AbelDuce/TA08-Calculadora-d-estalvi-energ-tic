@@ -1179,36 +1179,36 @@ section h2 {
                     <button class="btn btn-primary" id="addDataBtn" onclick="addConsumption()" style="display:none;">➕ Afegir dada</button>
                 </section>
 
-                <section class="calculations-section">
+                <section class="calculations-section" id="calculationsSection">
                     <h2>🧮 Càlculs disponibles</h2>
 
                     <div class="calculations-grid">
-                        <div class="calc-card electricity">
+                        <div class="calc-card electricity" id="calcCardElectricity">
                             <h3>⚡ Electricitat</h3>
                             <button class="btn btn-secondary" onclick="calculateElectricityYear()">Pròxim any</button>
                             <button class="btn btn-secondary" onclick="calculateElectricitySchoolYear()">Set-Juny</button>
                         </div>
 
-                        <div class="calc-card water">
+                        <div class="calc-card water" id="calcCardWater">
                             <h3>💧 Aigua</h3>
                             <button class="btn btn-secondary" onclick="calculateWaterYear()">Pròxim any</button>
                             <button class="btn btn-secondary" onclick="calculateWaterSchoolYear()">Set-Juny</button>
                         </div>
 
-                        <div class="calc-card supplies">
+                        <div class="calc-card supplies" id="calcCardSupplies">
                             <h3>📎 Consumibles</h3>
                             <button class="btn btn-secondary" onclick="calculateSuppliesYear()">Pròxim any</button>
                             <button class="btn btn-secondary" onclick="calculateSuppliesSchoolYear()">Set-Juny</button>
                         </div>
 
-                        <div class="calc-card cleaning">
+                        <div class="calc-card cleaning" id="calcCardCleaning">
                             <h3>🧹 Neteja</h3>
                             <button class="btn btn-secondary" onclick="calculateCleaningYear()">Pròxim any</button>
                             <button class="btn btn-secondary" onclick="calculateCleaningSchoolYear()">Set-Juny</button>
                         </div>
                     </div>
 
-                    <button class="btn btn-success" onclick="generateFullReport()">📄 Generar informe complet</button>
+                    <button class="btn btn-success" id="fullReportBtn" onclick="generateFullReport()">📄 Generar informe complet</button>
                 </section>
 
                 <section class="data-display-section" id="dataDisplaySection">
@@ -1819,12 +1819,30 @@ function updateDataDisplay() {
     updateTable('officeSupplies', 'suppliesTableBody', 'kg');
     updateTable('cleaningProducts', 'cleaningTableBody', '€');
 
-    const hasData = ['electricity', 'water', 'officeSupplies', 'cleaningProducts']
-        .some(t => consumptionData[t].length > 0);
-    const section = document.getElementById('dataDisplaySection');
-    const btn = document.getElementById('clearAllBtn');
-    if (section) section.style.display = hasData ? '' : 'none';
-    if (btn) btn.style.display = hasData ? '' : 'none';
+    const typeMap = {
+        electricity:      'calcCardElectricity',
+        water:            'calcCardWater',
+        officeSupplies:   'calcCardSupplies',
+        cleaningProducts: 'calcCardCleaning'
+    };
+
+    let anyData = false;
+    Object.entries(typeMap).forEach(([type, cardId]) => {
+        const hasData = consumptionData[type].length > 0;
+        if (hasData) anyData = true;
+        const card = document.getElementById(cardId);
+        if (card) card.style.display = hasData ? '' : 'none';
+    });
+
+    const calcSection = document.getElementById('calculationsSection');
+    const reportBtn   = document.getElementById('fullReportBtn');
+    if (calcSection) calcSection.style.display = anyData ? '' : 'none';
+    if (reportBtn)   reportBtn.style.display   = anyData ? '' : 'none';
+
+    const dataSection = document.getElementById('dataDisplaySection');
+    const clearBtn    = document.getElementById('clearAllBtn');
+    if (dataSection) dataSection.style.display = anyData ? '' : 'none';
+    if (clearBtn)    clearBtn.style.display    = anyData ? '' : 'none';
 }
 
 function updateTable(type, tableId, unit) {
