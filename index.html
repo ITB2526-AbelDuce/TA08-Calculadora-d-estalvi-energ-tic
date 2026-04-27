@@ -448,8 +448,9 @@ section h2 {
 }
 
 .summary-table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 0.93em; }
+.summary-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px; }
 
-.summary-table th { background: rgba(0,0,0,0.2); padding: 14px 16px; text-align: left; font-weight: 600; }
+.summary-table th { background: rgba(0,0,0,0.2); padding: 14px 16px; text-align: left; font-weight: 600; white-space: nowrap; }
 .summary-table td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.12); }
 .summary-table tr:hover td { background: rgba(255,255,255,0.07); }
 .total-row { background: rgba(0,0,0,0.25); font-weight: 700; font-size: 1.05em; }
@@ -1167,9 +1168,54 @@ section h2 {
     .confirm-cancel,
     .confirm-ok { width: 100%; padding: 11px; }
 
-    /* Summary tables */
+    /* Summary table → cards */
+    .summary-table thead { display: none; }
+    .summary-table,
+    .summary-table tbody,
+    .summary-table tr,
+    .summary-table td { display: block; width: 100%; }
+
+    .summary-table tbody tr {
+        background: rgba(255,255,255,0.06);
+        border-radius: 8px;
+        margin-bottom: 10px;
+        padding: 10px 0;
+        border-bottom: none;
+    }
+
+    .summary-table tbody tr.total-row {
+        background: rgba(0,0,0,0.25);
+        border-radius: 8px;
+    }
+
+    .summary-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 7px 14px;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        font-size: 0.85em;
+        text-align: right;
+    }
+
+    .summary-table td:last-child { border-bottom: none; }
+
+    .summary-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        text-align: left;
+        opacity: 0.75;
+        font-size: 0.82em;
+        flex-shrink: 0;
+        margin-right: 12px;
+        max-width: 45%;
+    }
+
+    .summary-table td[colspan] { display: none; }
+
+    /* Summary table outside media */
     .summary-table th,
-    .summary-table td { padding: 10px 10px; font-size: 0.85em; }
+    .summary-table td { padding: 8px 10px; font-size: 0.82em; }
 
     /* Toast */
     .toast { font-size: 0.88em; padding: 13px 20px; max-width: 88vw; white-space: normal; text-align: center; }
@@ -1460,7 +1506,9 @@ section h2 {
                     <!-- TAULA RESUM GLOBAL - ADALT DE TOT -->
                     <div class="summary-card">
                         <h3>📊 Resum Global de Potencial d'Estalvi - Dades ITB 2024-2025</h3>
+                        <div class="summary-table-wrapper">
                         <table class="summary-table">
+                            <thead>
                             <tr>
                                 <th>Recurs</th>
                                 <th>Consum Actual</th>
@@ -1468,40 +1516,44 @@ section h2 {
                                 <th>Optimitzat</th>
                                 <th>Estalvi/any</th>
                             </tr>
+                            </thead>
+                            <tbody>
                             <tr>
-                                <td>Electricitat (Import)</td>
-                                <td>419.79 kWh/mes</td>
-                                <td>30%</td>
-                                <td>293.85 kWh/mes</td>
-                                <td>552.36€</td>
+                                <td data-label="Recurs">Electricitat (Import)</td>
+                                <td data-label="Consum Actual">419.79 kWh/mes</td>
+                                <td data-label="Potencial">30%</td>
+                                <td data-label="Optimitzat">293.85 kWh/mes</td>
+                                <td data-label="Estalvi/any">552.36€</td>
                             </tr>
                             <tr>
-                                <td>Aigua</td>
-                                <td>110 m³/any (9.17 m³/mes)</td>
-                                <td>40%</td>
-                                <td>6.6 m³/mes</td>
-                                <td>238.02€</td>
+                                <td data-label="Recurs">Aigua</td>
+                                <td data-label="Consum Actual">110 m³/any (9.17 m³/mes)</td>
+                                <td data-label="Potencial">40%</td>
+                                <td data-label="Optimitzat">6.6 m³/mes</td>
+                                <td data-label="Estalvi/any">238.02€</td>
                             </tr>
                             <tr>
-                                <td>Consumibles</td>
-                                <td>10 paquets A4/mes</td>
-                                <td>50%</td>
-                                <td>5 paquets/mes</td>
-                                <td>75.00€</td>
+                                <td data-label="Recurs">Consumibles</td>
+                                <td data-label="Consum Actual">10 paquets A4/mes</td>
+                                <td data-label="Potencial">50%</td>
+                                <td data-label="Optimitzat">5 paquets/mes</td>
+                                <td data-label="Estalvi/any">75.00€</td>
                             </tr>
                             <tr>
-                                <td>Neteja (Productes + Serveis)</td>
-                                <td>996€/mes (11,952€/any)</td>
-                                <td>35%</td>
-                                <td>647.4€/mes</td>
-                                <td>4,183.20€</td>
+                                <td data-label="Recurs">Neteja (Productes + Serveis)</td>
+                                <td data-label="Consum Actual">996€/mes (11,952€/any)</td>
+                                <td data-label="Potencial">35%</td>
+                                <td data-label="Optimitzat">647.4€/mes</td>
+                                <td data-label="Estalvi/any">4,183.20€</td>
                             </tr>
                             <tr class="total-row">
-                                <td><strong>TOTAL ANUAL ESTIMAT</strong></td>
-                                <td colspan="3"></td>
-                                <td><strong>5,048.58€</strong></td>
+                                <td data-label="Recurs"><strong>TOTAL ANUAL ESTIMAT</strong></td>
+                                <td data-label="Consum Actual" colspan="3"></td>
+                                <td data-label="Estalvi/any"><strong>5,048.58€</strong></td>
                             </tr>
+                            </tbody>
                         </table>
+                        </div>
                     </div>
 
                     <div class="strategy-card electricity-strategy">
