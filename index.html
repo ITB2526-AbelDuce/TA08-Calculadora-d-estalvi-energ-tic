@@ -1332,166 +1332,210 @@ section h2 {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
 }
+/* ── LANG SWITCHER ──────────────────────────────────────────── */
+.lang-switcher {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+}
+
+.lang-btn {
+    padding: 6px 14px;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82em;
+    font-weight: 500;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
+}
+
+.lang-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-lt);
+}
+
+.lang-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+@media (max-width: 600px) {
+    .lang-switcher { justify-content: center; margin-bottom: 10px; }
+    .lang-btn { padding: 5px 10px; font-size: 0.78em; }
+}
+.btn-export {
+    background: var(--accent);
+    color: white;
+    border: none;
+    margin-top: 10px;
+    width: 100%;
+}
+.btn-export:hover {
+    background: #9a7030;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(181,134,58,0.35);
+}
+/* ── END LANG SWITCHER ──────────────────────────────────────── */
     </style>
 </head>
     <div class="container">
         <header>
-            <h1>📊 Calculadora de Consum de Recursos</h1>
-            <p class="subtitle">Analitza, optimitza i implementa millores amb economia circular</p>
+            <div class="lang-switcher">
+                <button class="lang-btn active" onclick="setLang('ca')" id="btn-ca">CAT</button>
+                <button class="lang-btn" onclick="setLang('es')" id="btn-es">CAS</button>
+                <button class="lang-btn" onclick="setLang('en')" id="btn-en">ENG</button>
+            </div>
+            <h1 data-i18n="title">📊 Calculadora de Consum de Recursos</h1>
+            <p class="subtitle" data-i18n="subtitle">Analitza, optimitza i implementa millores amb economia circular</p>
         </header>
 
         <nav class="tabs">
-            <button class="tab-btn active" onclick="switchTab('calculator')">📈 Calculadora</button>
-            <button class="tab-btn" onclick="switchTab('actionplan')">🎯 Pla 3 Anys</button>
-            <button class="tab-btn" onclick="switchTab('strategies')">💡 Estratègies</button>
-            <button class="tab-btn" onclick="switchTab('forecast')">🔮 Predicció</button>
+            <button class="tab-btn active" onclick="switchTab('calculator')" data-i18n="tab_calculator">📈 Calculadora</button>
+            <button class="tab-btn" onclick="switchTab('actionplan')" data-i18n="tab_actionplan">🎯 Pla 3 Anys</button>
+            <button class="tab-btn" onclick="switchTab('strategies')" data-i18n="tab_strategies">💡 Estratègies</button>
+            <button class="tab-btn" onclick="switchTab('forecast')" data-i18n="tab_forecast">🔮 Predicció</button>
         </nav>
 
         <div class="main-content">
             <!-- TAB 1: CALCULADORA -->
             <div id="calculator" class="tab-content active">
                 <section class="data-input-section">
-                    <h2>📥 Afegir dades de consum</h2>
+                    <h2 data-i18n="add_data">📥 Afegir dades de consum</h2>
 
                     <div class="input-group">
-                        <label for="consumptionType">Tipus de consum:</label>
+                        <label for="consumptionType" data-i18n="type_label">Tipus de consum:</label>
                         <select id="consumptionType" onchange="updateStrategiesSelect(); checkAddButton()">
-                            <option value="">-- Selecciona un tipus --</option>
-                            <option value="electricity">⚡ Electricitat (kWh)</option>
-                            <option value="water">💧 Aigua (m³)</option>
-                            <option value="officeSupplies">📎 Consumibles d'oficina (kg)</option>
-                            <option value="cleaningProducts">🧹 Productes de neteja (€/mes)</option>
+                            <option value="" data-i18n="type_placeholder">-- Selecciona un tipus --</option>
+                            <option value="electricity" data-i18n="type_electricity">⚡ Electricitat (kWh)</option>
+                            <option value="water" data-i18n="type_water">💧 Aigua (m³)</option>
+                            <option value="officeSupplies" data-i18n="type_supplies">📎 Consumibles d'oficina (kg)</option>
+                            <option value="cleaningProducts" data-i18n="type_cleaning">🧹 Productes de neteja (€/mes)</option>
                         </select>
                     </div>
 
                     <div id="strategiesContainer" style="display: none;">
                         <div class="input-group">
-                            <label for="appliedStrategy">Estratègia aplicada:</label>
+                            <label for="appliedStrategy" data-i18n="strategy_label">Estratègia aplicada:</label>
                             <select id="appliedStrategy" onchange="displayStrategyInfo()">
-                                <option value="">-- Cap estratègia --</option>
+                                <option value="" data-i18n="strategy_none">-- Cap estratègia --</option>
                             </select>
                         </div>
                         <div class="strategy-info" id="strategyInfo"></div>
                     </div>
 
                     <div class="input-group">
-                        <label for="consumptionValue">Valor de consum:</label>
-                        <input type="number" id="consumptionValue" placeholder="Introduïx la quantitat" min="0" step="0.01" oninput="checkAddButton()">
+                        <label for="consumptionValue" data-i18n="value_label">Valor de consum:</label>
+                        <input type="number" id="consumptionValue" placeholder="Introduïx la quantitat" data-i18n-placeholder="value_placeholder" min="0" step="0.01" oninput="checkAddButton()">
                     </div>
 
                     <div class="input-group">
-                        <label for="consumptionDate">Data:</label>
+                        <label for="consumptionDate" data-i18n="date_label">Data:</label>
                         <input type="date" id="consumptionDate" onchange="checkAddButton()">
                     </div>
 
-                    <button class="btn btn-primary" id="addDataBtn" onclick="addConsumption()" style="display:none;">➕ Afegir dada</button>
+                    <button class="btn btn-primary" id="addDataBtn" onclick="addConsumption()" style="display:none;" data-i18n="btn_add">➕ Afegir dada</button>
                 </section>
 
                 <section class="calculations-section" id="calculationsSection">
-                    <h2>🧮 Càlculs disponibles</h2>
-
+                    <h2 data-i18n="calc_title">🧮 Càlculs disponibles</h2>
                     <div class="calculations-grid">
                         <div class="calc-card electricity" id="calcCardElectricity">
-                            <h3>⚡ Electricitat</h3>
-                            <button class="btn btn-secondary" onclick="calculateElectricityYear()">Pròxim any</button>
-                            <button class="btn btn-secondary" onclick="calculateElectricitySchoolYear()">Set-Juny</button>
+                            <h3 data-i18n="type_electricity">⚡ Electricitat</h3>
+                            <button class="btn btn-secondary" onclick="calculateElectricityYear()" data-i18n="btn_next_year">Pròxim any</button>
+                            <button class="btn btn-secondary" onclick="calculateElectricitySchoolYear()" data-i18n="btn_school_year">Set-Juny</button>
                         </div>
-
                         <div class="calc-card water" id="calcCardWater">
-                            <h3>💧 Aigua</h3>
-                            <button class="btn btn-secondary" onclick="calculateWaterYear()">Pròxim any</button>
-                            <button class="btn btn-secondary" onclick="calculateWaterSchoolYear()">Set-Juny</button>
+                            <h3 data-i18n="type_water">💧 Aigua</h3>
+                            <button class="btn btn-secondary" onclick="calculateWaterYear()" data-i18n="btn_next_year">Pròxim any</button>
+                            <button class="btn btn-secondary" onclick="calculateWaterSchoolYear()" data-i18n="btn_school_year">Set-Juny</button>
                         </div>
-
                         <div class="calc-card supplies" id="calcCardSupplies">
-                            <h3>📎 Consumibles</h3>
-                            <button class="btn btn-secondary" onclick="calculateSuppliesYear()">Pròxim any</button>
-                            <button class="btn btn-secondary" onclick="calculateSuppliesSchoolYear()">Set-Juny</button>
+                            <h3 data-i18n="type_supplies_short">📎 Consumibles</h3>
+                            <button class="btn btn-secondary" onclick="calculateSuppliesYear()" data-i18n="btn_next_year">Pròxim any</button>
+                            <button class="btn btn-secondary" onclick="calculateSuppliesSchoolYear()" data-i18n="btn_school_year">Set-Juny</button>
                         </div>
-
                         <div class="calc-card cleaning" id="calcCardCleaning">
-                            <h3>🧹 Neteja</h3>
-                            <button class="btn btn-secondary" onclick="calculateCleaningYear()">Pròxim any</button>
-                            <button class="btn btn-secondary" onclick="calculateCleaningSchoolYear()">Set-Juny</button>
+                            <h3 data-i18n="type_cleaning_short">🧹 Neteja</h3>
+                            <button class="btn btn-secondary" onclick="calculateCleaningYear()" data-i18n="btn_next_year">Pròxim any</button>
+                            <button class="btn btn-secondary" onclick="calculateCleaningSchoolYear()" data-i18n="btn_school_year">Set-Juny</button>
                         </div>
                     </div>
-
-                    <button class="btn btn-success" id="fullReportBtn" onclick="generateFullReport()">📄 Generar informe complet</button>
+                    <button class="btn btn-success" id="fullReportBtn" onclick="generateFullReport()" data-i18n="btn_report">📄 Generar informe complet</button>
+                    <button class="btn btn-export" id="exportPdfBtn" onclick="exportPDF()" style="display:none;" data-i18n="btn_export_pdf">⬇️ Exportar PDF</button>
                 </section>
 
                 <section class="data-display-section" id="dataDisplaySection">
-                    <h2>📋 Dades registrades</h2>
+                    <h2 data-i18n="data_title">📋 Dades registrades</h2>
                     <div class="data-tables">
                         <div class="data-table">
-                            <h3>⚡ Electricitat (kWh)</h3>
+                            <h3 data-i18n="dt_elec_title">⚡ Electricitat (kWh)</h3>
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Valor</th>
-                                        <th>Estratègia</th>
-                                        <th>Acció</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr>
+                                    <th data-i18n="th_date">Data</th>
+                                    <th data-i18n="th_value">Valor</th>
+                                    <th data-i18n="th_strategy">Estratègia</th>
+                                    <th data-i18n="th_action">Acció</th>
+                                </tr></thead>
                                 <tbody id="electricityTableBody"></tbody>
                             </table>
                         </div>
 
                         <div class="data-table">
-                            <h3>💧 Aigua (m³)</h3>
+                            <h3 data-i18n="dt_water_title">💧 Aigua (m³)</h3>
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Valor</th>
-                                        <th>Estratègia</th>
-                                        <th>Acció</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr>
+                                    <th data-i18n="th_date">Data</th>
+                                    <th data-i18n="th_value">Valor</th>
+                                    <th data-i18n="th_strategy">Estratègia</th>
+                                    <th data-i18n="th_action">Acció</th>
+                                </tr></thead>
                                 <tbody id="waterTableBody"></tbody>
                             </table>
                         </div>
 
                         <div class="data-table">
-                            <h3>📎 Consumibles (kg)</h3>
+                            <h3 data-i18n="dt_supplies_title">📎 Consumibles (kg)</h3>
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Valor</th>
-                                        <th>Estratègia</th>
-                                        <th>Acció</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr>
+                                    <th data-i18n="th_date">Data</th>
+                                    <th data-i18n="th_value">Valor</th>
+                                    <th data-i18n="th_strategy">Estratègia</th>
+                                    <th data-i18n="th_action">Acció</th>
+                                </tr></thead>
                                 <tbody id="suppliesTableBody"></tbody>
                             </table>
                         </div>
 
                         <div class="data-table">
-                            <h3>🧹 Neteja (€/mes)</h3>
+                            <h3 data-i18n="dt_cleaning_title">🧹 Neteja (€/mes)</h3>
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Valor</th>
-                                        <th>Estratègia</th>
-                                        <th>Acció</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr>
+                                    <th data-i18n="th_date">Data</th>
+                                    <th data-i18n="th_value">Valor</th>
+                                    <th data-i18n="th_strategy">Estratègia</th>
+                                    <th data-i18n="th_action">Acció</th>
+                                </tr></thead>
                                 <tbody id="cleaningTableBody"></tbody>
                             </table>
                         </div>
                     </div>
 
-                    <button class="btn btn-danger" id="clearAllBtn" onclick="clearAllData()">🗑️ Buidar totes les dades</button>
+                    <button class="btn btn-danger" id="clearAllBtn" onclick="clearAllData()" data-i18n="btn_clear_all">🗑️ Buidar totes les dades</button>
                 </section>
             </div>
 
             <!-- TAB 2: PLA 3 ANYS -->
             <div id="actionplan" class="tab-content">
                 <section class="actionplan-section">
-                    <h2>🎯 Pla d'Accions a 3 Anys - Reducció 30%</h2>
-                    <p class="intro-text">Pla detallat per reduir un 30% l'impacte ambiental en 3 anys amb accions concretes i measurables.</p>
+                    <h2 data-i18n="actionplan_title">🎯 Pla d'Accions a 3 Anys - Reducció 30%</h2>
+                    <p class="intro-text" data-i18n="actionplan_intro">Pla detallat per reduir un 30% l'impacte ambiental en 3 anys amb accions concretes i measurables.</p>
 
                     <div id="actionPlanContent"></div>
                 </section>
@@ -1500,54 +1544,54 @@ section h2 {
             <!-- TAB 3: ESTRATÈGIES -->
             <div id="strategies" class="tab-content">
                 <section class="strategies-section">
-                    <h2>💡 Estratègies de Reducció de Consum</h2>
-                    <p class="intro-text">Aplicant tendències estacionals i optimitzacions, aquí tenim les millors estratègies per reduir el consum.</p>
+                    <h2 data-i18n="strategies_title">💡 Estratègies de Reducció de Consum</h2>
+                    <p class="intro-text" data-i18n="strategies_intro">Aplicant tendències estacionals i optimitzacions, aquí tenim les millors estratègies per reduir el consum.</p>
 
                     <!-- TAULA RESUM GLOBAL - ADALT DE TOT -->
                     <div class="summary-card">
-                        <h3>📊 Resum Global de Potencial d'Estalvi - Dades ITB 2024-2025</h3>
+                        <h3 data-i18n="summary_title">📊 Resum Global de Potencial d'Estalvi - Dades ITB 2024-2025</h3>
                         <div class="summary-table-wrapper">
                         <table class="summary-table">
                             <thead>
                             <tr>
-                                <th>Recurs</th>
-                                <th>Consum Actual</th>
-                                <th>Potencial</th>
-                                <th>Optimitzat</th>
-                                <th>Estalvi/any</th>
+                                <th data-i18n="th_resource">Recurs</th>
+                                <th data-i18n="th_current">Consum Actual</th>
+                                <th data-i18n="th_potential">Potencial</th>
+                                <th data-i18n="th_optimised">Optimitzat</th>
+                                <th data-i18n="th_saving">Estalvi/any</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr>
-                                <td data-label="Recurs">Electricitat (Import)</td>
+                                <td data-label="Recurs" data-i18n="row_elec_name">Electricitat (Import)</td>
                                 <td data-label="Consum Actual">419.79 kWh/mes</td>
                                 <td data-label="Potencial">30%</td>
                                 <td data-label="Optimitzat">293.85 kWh/mes</td>
                                 <td data-label="Estalvi/any">552.36€</td>
                             </tr>
                             <tr>
-                                <td data-label="Recurs">Aigua</td>
-                                <td data-label="Consum Actual">110 m³/any (9.17 m³/mes)</td>
+                                <td data-label="Recurs" data-i18n="row_water_name">Aigua</td>
+                                <td data-label="Consum Actual" data-i18n="row_water_current">110 m³/any (9.17 m³/mes)</td>
                                 <td data-label="Potencial">40%</td>
                                 <td data-label="Optimitzat">6.6 m³/mes</td>
                                 <td data-label="Estalvi/any">238.02€</td>
                             </tr>
                             <tr>
-                                <td data-label="Recurs">Consumibles</td>
-                                <td data-label="Consum Actual">10 paquets A4/mes</td>
+                                <td data-label="Recurs" data-i18n="row_supplies_name">Consumibles</td>
+                                <td data-label="Consum Actual" data-i18n="row_supplies_current">10 paquets A4/mes</td>
                                 <td data-label="Potencial">50%</td>
-                                <td data-label="Optimitzat">5 paquets/mes</td>
+                                <td data-label="Optimitzat" data-i18n="row_supplies_opt">5 paquets/mes</td>
                                 <td data-label="Estalvi/any">75.00€</td>
                             </tr>
                             <tr>
-                                <td data-label="Recurs">Neteja (Productes + Serveis)</td>
+                                <td data-label="Recurs" data-i18n="row_cleaning_name">Neteja (Productes + Serveis)</td>
                                 <td data-label="Consum Actual">996€/mes (11,952€/any)</td>
                                 <td data-label="Potencial">35%</td>
                                 <td data-label="Optimitzat">647.4€/mes</td>
                                 <td data-label="Estalvi/any">4,183.20€</td>
                             </tr>
                             <tr class="total-row">
-                                <td data-label="Recurs"><strong>TOTAL ANUAL ESTIMAT</strong></td>
+                                <td data-label="Recurs" data-i18n="row_total"><strong>TOTAL ANUAL ESTIMAT</strong></td>
                                 <td data-label="Consum Actual" colspan="3"></td>
                                 <td data-label="Estalvi/any"><strong>5,048.58€</strong></td>
                             </tr>
@@ -1558,117 +1602,109 @@ section h2 {
 
                     <div class="strategy-card electricity-strategy">
                         <div class="strategy-header">
-                            <h3>⚡ Electricitat</h3>
-                            <span class="potential-saving">Estalvi potencial: 20-30%</span>
+                            <h3 data-i18n="strat_elec_title">⚡ Electricitat</h3>
+                            <span class="potential-saving" data-i18n="strat_elec_saving">Estalvi potencial: 20-30%</span>
                         </div>
                         <div class="strategy-content">
-                            <h4>🌡️ Situació ITB:</h4>
+                            <h4 data-i18n="strat_situation">🌡️ Situació ITB:</h4>
                             <ul>
-                                <li><strong>Generació solar actual:</strong> 1419.86 kWh (Gener 2025)</li>
-                                <li><strong>Import energia necessari:</strong> 419.79 kWh (30% del total)</li>
-                                <li><strong>Autoconsum fotovoltaic:</strong> 94.2%</li>
-                                <li><strong>CO2 evitat:</strong> 0.69 tones (Gener 2025)</li>
+                                <li><strong data-i18n="strat_elec_s1k">Generació solar actual:</strong> <span data-i18n="strat_elec_s1v">1419.86 kWh (Gener 2025)</span></li>
+                                <li><strong data-i18n="strat_elec_s2k">Import energia necessari:</strong> <span data-i18n="strat_elec_s2v">419.79 kWh (30% del total)</span></li>
+                                <li><strong data-i18n="strat_elec_s3k">Autoconsum fotovoltaic:</strong> <span>94.2%</span></li>
+                                <li><strong data-i18n="strat_elec_s4k">CO2 evitat:</strong> <span data-i18n="strat_elec_s4v">0.69 tones (Gener 2025)</span></li>
                             </ul>
-
-                            <h4>💡 Accions Immediates:</h4>
+                            <h4 data-i18n="strat_actions">💡 Accions Immediates:</h4>
                             <ul>
-                                <li>Canviar a LED totes les bombetes (estalvi 75-80%)</li>
-                                <li>Instal·lar sensors de moviment als passadissos</li>
-                                <li>Fer manteniment mensual d'aires acondicionats</li>
-                                <li>Apagar equips en repòs - estalvi 10-15%</li>
-                                <li>Optimitzar ús de panells solars existents</li>
+                                <li data-i18n="strat_elec_a1">Canviar a LED totes les bombetes (estalvi 75-80%)</li>
+                                <li data-i18n="strat_elec_a2">Instal·lar sensors de moviment als passadissos</li>
+                                <li data-i18n="strat_elec_a3">Fer manteniment mensual d'aires acondicionats</li>
+                                <li data-i18n="strat_elec_a4">Apagar equips en repòs - estalvi 10-15%</li>
+                                <li data-i18n="strat_elec_a5">Optimitzar ús de panells solars existents</li>
                             </ul>
-
                             <div class="impact-box">
-                                <strong>💰 Impacte estimat:</strong> De 419.79 kWh/mes → 293.85 kWh/mes (30% reducció)
+                                <strong data-i18n="strat_impact">💰 Impacte estimat:</strong> <span data-i18n="strat_elec_impact">De 419.79 kWh/mes → 293.85 kWh/mes (30% reducció)</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="strategy-card water-strategy">
                         <div class="strategy-header">
-                            <h3>💧 Aigua</h3>
-                            <span class="potential-saving">Estalvi potencial: 25-40%</span>
+                            <h3 data-i18n="strat_water_title">💧 Aigua</h3>
+                            <span class="potential-saving" data-i18n="strat_water_saving">Estalvi potencial: 25-40%</span>
                         </div>
                         <div class="strategy-content">
-                            <h4>🌊 Situació ITB:</h4>
+                            <h4 data-i18n="strat_water_situation">🌊 Situació ITB:</h4>
                             <ul>
-                                <li><strong>Consum anual:</strong> 110 m³</li>
-                                <li><strong>Per càpita:</strong> 0.1 m³/persona (molt eficient)</li>
-                                <li><strong>Cost total (2024):</strong> 597.54€</li>
-                                <li><strong>Preu/m³:</strong> 5.43€</li>
+                                <li><strong data-i18n="strat_water_s1k">Consum anual:</strong> <span>110 m³</span></li>
+                                <li><strong data-i18n="strat_water_s2k">Per càpita:</strong> <span data-i18n="strat_water_s2v">0.1 m³/persona (molt eficient)</span></li>
+                                <li><strong data-i18n="strat_water_s3k">Cost total (2024):</strong> <span>597.54€</span></li>
+                                <li><strong data-i18n="strat_water_s4k">Preu/m³:</strong> <span>5.43€</span></li>
                             </ul>
-
-                            <h4>🚰 Accions Immediates:</h4>
+                            <h4 data-i18n="strat_water_actions">🚰 Accions Immediates:</h4>
                             <ul>
-                                <li>Instal·lar grifos amb sensor (estalvi 30-40%)</li>
-                                <li>Revisar i reparar fuites setmanals</li>
-                                <li>Instal·lar inodors de doble flux (4.5L vs 9L)</li>
-                                <li>Crear sistema de recollida d'aigua de pluja</li>
-                                <li>Monitorització contínua de consums</li>
+                                <li data-i18n="strat_water_a1">Instal·lar grifos amb sensor (estalvi 30-40%)</li>
+                                <li data-i18n="strat_water_a2">Revisar i reparar fuites setmanals</li>
+                                <li data-i18n="strat_water_a3">Instal·lar inodors de doble flux (4.5L vs 9L)</li>
+                                <li data-i18n="strat_water_a4">Crear sistema de recollida d'aigua de pluja</li>
+                                <li data-i18n="strat_water_a5">Monitorització contínua de consums</li>
                             </ul>
-
                             <div class="impact-box">
-                                <strong>💰 Impacte estimat:</strong> De 110 m³/any → 66 m³/any (40% reducció)
+                                <strong data-i18n="strat_impact">💰 Impacte estimat:</strong> <span data-i18n="strat_water_impact">De 110 m³/any → 66 m³/any (40% reducció)</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="strategy-card supplies-strategy">
                         <div class="strategy-header">
-                            <h3>📎 Consumibles d'Oficina</h3>
-                            <span class="potential-saving">Estalvi potencial: 35-50%</span>
+                            <h3 data-i18n="strat_supplies_title">📎 Consumibles d'Oficina</h3>
+                            <span class="potential-saving" data-i18n="strat_supplies_saving">Estalvi potencial: 35-50%</span>
                         </div>
                         <div class="strategy-content">
-                            <h4>📚 Situació ITB:</h4>
+                            <h4 data-i18n="strat_supplies_situation">📚 Situació ITB:</h4>
                             <ul>
-                                <li><strong>Paper A4 80g actual:</strong> 10 paquets/mes (1000 fulls)</li>
-                                <li><strong>Tòner HP 203X:</strong> 2 unitats/mes</li>
-                                <li><strong>Proveïdors:</strong> Lyreco, Amazon</li>
-                                <li><strong>Potencial d'optimització:</strong> Alt (transició digital)</li>
+                                <li><strong data-i18n="strat_supplies_s1k">Paper A4 80g actual:</strong> <span data-i18n="strat_supplies_s1v">10 paquets/mes (1000 fulls)</span></li>
+                                <li><strong data-i18n="strat_supplies_s2k">Tòner HP 203X:</strong> <span data-i18n="strat_supplies_s2v">2 unitats/mes</span></li>
+                                <li><strong data-i18n="strat_supplies_s3k">Proveïdors:</strong> <span>Lyreco, Amazon</span></li>
+                                <li><strong data-i18n="strat_supplies_s4k">Potencial d'optimització:</strong> <span data-i18n="strat_supplies_s4v">Alt (transició digital)</span></li>
                             </ul>
-
-                            <h4>📄 Accions Immediates:</h4>
+                            <h4 data-i18n="strat_supplies_actions">📄 Accions Immediates:</h4>
                             <ul>
-                                <li>Implementar política "paperless" (estalvi 60%)</li>
-                                <li>Imprimir en doble cara per defecte (estalvi 50%)</li>
-                                <li>Usar paper reciclat certificat</li>
-                                <li>Crear biblioteca de tòners reutilitzables</li>
-                                <li>Reduir a 5 paquets/mes (50% reducció)</li>
+                                <li data-i18n="strat_supplies_a1">Implementar política "paperless" (estalvi 60%)</li>
+                                <li data-i18n="strat_supplies_a2">Imprimir en doble cara per defecte (estalvi 50%)</li>
+                                <li data-i18n="strat_supplies_a3">Usar paper reciclat certificat</li>
+                                <li data-i18n="strat_supplies_a4">Crear biblioteca de tòners reutilitzables</li>
+                                <li data-i18n="strat_supplies_a5">Reduir a 5 paquets/mes (50% reducció)</li>
                             </ul>
-
                             <div class="impact-box">
-                                <strong>💰 Impacte estimat:</strong> De 10 paq/mes → 5 paq/mes (50% reducció)
+                                <strong data-i18n="strat_impact">💰 Impacte estimat:</strong> <span data-i18n="strat_supplies_impact">De 10 paq/mes → 5 paq/mes (50% reducció)</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="strategy-card cleaning-strategy">
                         <div class="strategy-header">
-                            <h3>🧹 Productes de Neteja</h3>
-                            <span class="potential-saving">Estalvi potencial: 30-45%</span>
+                            <h3 data-i18n="strat_cleaning_title">🧹 Productes de Neteja</h3>
+                            <span class="potential-saving" data-i18n="strat_cleaning_saving">Estalvi potencial: 30-45%</span>
                         </div>
                         <div class="strategy-content">
-                            <h4>🧼 Situació ITB (Dades Reals 2024):</h4>
+                            <h4 data-i18n="strat_cleaning_situation">🧼 Situació ITB (Dades Reals 2024):</h4>
                             <ul>
-                                <li><strong>Cost mensual total:</strong> 996€ (factures 20/06 i 27/05)</li>
-                                <li><strong>Productes de neteja:</strong> ~620€/mes</li>
-                                <li><strong>Serveis (mà d'obra):</strong> ~376€/mes</li>
-                                <li><strong>Cost anual estimat:</strong> 11,952€</li>
-                                <li><strong>Per càpita:</strong> 10.87€/persona/mes</li>
+                                <li><strong data-i18n="strat_cleaning_s1k">Cost mensual total:</strong> <span data-i18n="strat_cleaning_s1v">996€ (factures 20/06 i 27/05)</span></li>
+                                <li><strong data-i18n="strat_cleaning_s2k">Productes de neteja:</strong> <span>~620€/mes</span></li>
+                                <li><strong data-i18n="strat_cleaning_s3k">Serveis (mà d'obra):</strong> <span>~376€/mes</span></li>
+                                <li><strong data-i18n="strat_cleaning_s4k">Cost anual estimat:</strong> <span>11,952€</span></li>
+                                <li><strong data-i18n="strat_cleaning_s5k">Per càpita:</strong> <span>10.87€/persona/mes</span></li>
                             </ul>
-
-                            <h4>🧽 Accions Immediates:</h4>
+                            <h4 data-i18n="strat_cleaning_actions">🧽 Accions Immediates:</h4>
                             <ul>
-                                <li>Cambiar a productes ecológicos concentrados (-15% cost)</li>
-                                <li>Usar microfiber cloths per reduir productes (-20%)</li>
-                                <li>Preparar soluciones naturals: vinagre+aigua (-25%)</li>
-                                <li>Implementar protocolos de neteja eficient</li>
-                                <li>Formació del personal en dosificació correcta (-10%)</li>
+                                <li data-i18n="strat_cleaning_a1">Canviar a productes ecològics concentrats (-15% cost)</li>
+                                <li data-i18n="strat_cleaning_a2">Usar draps de microfibra per reduir productes (-20%)</li>
+                                <li data-i18n="strat_cleaning_a3">Preparar solucions naturals: vinagre+aigua (-25%)</li>
+                                <li data-i18n="strat_cleaning_a4">Implementar protocols de neteja eficient</li>
+                                <li data-i18n="strat_cleaning_a5">Formació del personal en dosificació correcta (-10%)</li>
                             </ul>
-
                             <div class="impact-box">
-                                <strong>💰 Impacte estimat:</strong> De 996€/mes → 647.40€/mes (35% reducció = 4,183.20€/any)
+                                <strong data-i18n="strat_impact">💰 Impacte estimat:</strong> <span data-i18n="strat_cleaning_impact">De 996€/mes → 647.40€/mes (35% reducció = 4,183.20€/any)</span>
                             </div>
                         </div>
                     </div>
@@ -1679,11 +1715,11 @@ section h2 {
             <div id="forecast" class="tab-content">
                 <!-- SECCIÓ PLA MENSUAL -->
                 <section class="planning-section">
-                    <h2>📅 Pla Mensual d'Estratègies</h2>
-                    <p class="intro-text">Planifica quines estratègies implementaràs cada mes per a cada tipus de consum. Els impactes es reflectiran automàticament a les prediccions.</p>
+                    <h2 data-i18n="planning_title">📅 Pla Mensual d'Estratègies</h2>
+                    <p class="intro-text" data-i18n="planning_intro">Planifica quines estratègies implementaràs cada mes per a cada tipus de consum. Els impactes es reflectiran automàticament a les prediccions.</p>
 
                     <div class="planning-controls">
-                        <label for="planningYear">Any de planificació:</label>
+                        <label for="planningYear" data-i18n="planning_year_label">Any de planificació:</label>
                         <select id="planningYear" onchange="updatePlanningDisplay()">
                         </select>
                     </div>
@@ -1711,22 +1747,22 @@ section h2 {
                     </div>
 
                     <div class="planning-summary">
-                        <h3>📊 Resum de l'Impacte Planificat</h3>
+                        <h3 data-i18n="planning_summary_title">📊 Resum de l'Impacte Planificat</h3>
                         <div id="planningSummary"></div>
                         <div class="planning-buttons">
-                            <button class="btn btn-success" onclick="savePlanningAndUpdateForecast()">💾 Guardar Pla i Actualitzar Prediccions</button>
-                            <button class="btn btn-danger btn-clear-plan" onclick="clearMonthlyPlan()">🗑️ Esborrar Totes les Estratègies</button>
+                            <button class="btn btn-success" onclick="savePlanningAndUpdateForecast()" data-i18n="btn_save_plan">💾 Guardar Pla i Actualitzar Prediccions</button>
+                            <button class="btn btn-danger btn-clear-plan" onclick="clearMonthlyPlan()" data-i18n="btn_clear_plan">🗑️ Esborrar Totes les Estratègies</button>
                         </div>
                     </div>
                 </section>
 
                 <!-- SECCIÓ PREDICCIÓ -->
                 <section class="forecast-section">
-                    <h2>🔮 Predicció Estacional de Consum - Basada en dades ITB</h2>
-                    <p class="intro-text">Predicció basada en consums reals del ITB i cicles estacionals. Les prediccions varien per any segons la implementació d'estratègies.</p>
+                    <h2 data-i18n="forecast_title">🔮 Predicció Estacional de Consum - Basada en dades ITB</h2>
+                    <p class="intro-text" data-i18n="forecast_intro">Predicció basada en consums reals del ITB i cicles estacionals. Les prediccions varien per any segons la implementació d'estratègies.</p>
 
                     <div class="forecast-controls">
-                        <label for="forecastYear">Any:</label>
+                        <label for="forecastYear" data-i18n="forecast_year_label">Any:</label>
                         <select id="forecastYear" onchange="updateForecast()">
                         </select>
                     </div>
@@ -1735,38 +1771,38 @@ section h2 {
 
                     <div class="forecast-grid">
                         <div class="forecast-card">
-                            <h3>⚡ Electricitat (kWh/mes)</h3>
+                            <h3 data-i18n="fc_elec_title">⚡ Electricitat (kWh/mes)</h3>
                             <canvas id="electricityChart"></canvas>
                             <div class="forecast-summary">
-                                <p><strong>Base ITB:</strong> 419.79 kWh/mes (import)</p>
-                                <p><strong>Promig anual:</strong> <span id="elecAvg">0</span> kWh/mes</p>
+                                <p><strong data-i18n="fc_base">Base ITB:</strong> 419.79 kWh/mes (import)</p>
+                                <p><strong data-i18n="fc_avg">Promig anual:</strong> <span id="elecAvg">0</span> kWh/mes</p>
                             </div>
                         </div>
 
                         <div class="forecast-card">
-                            <h3>💧 Aigua (m³/mes)</h3>
+                            <h3 data-i18n="fc_water_title">💧 Aigua (m³/mes)</h3>
                             <canvas id="waterChart"></canvas>
                             <div class="forecast-summary">
-                                <p><strong>Base ITB:</strong> 9.17 m³/mes (110 m³/any)</p>
-                                <p><strong>Promig anual:</strong> <span id="waterAvg">0</span> m³/mes</p>
+                                <p><strong data-i18n="fc_base">Base ITB:</strong> 9.17 m³/mes (110 m³/any)</p>
+                                <p><strong data-i18n="fc_avg">Promig anual:</strong> <span id="waterAvg">0</span> m³/mes</p>
                             </div>
                         </div>
 
                         <div class="forecast-card">
-                            <h3>📎 Consumibles (paquets A4/mes)</h3>
+                            <h3 data-i18n="fc_supplies_title">📎 Consumibles (paquets A4/mes)</h3>
                             <canvas id="suppliesChart"></canvas>
                             <div class="forecast-summary">
-                                <p><strong>Base ITB:</strong> 10 paquets/mes</p>
-                                <p><strong>Promig anual:</strong> <span id="suppliesAvg">0</span> paq/mes</p>
+                                <p><strong data-i18n="fc_base">Base ITB:</strong> 10 paquets/mes</p>
+                                <p><strong data-i18n="fc_avg">Promig anual:</strong> <span id="suppliesAvg">0</span> paq/mes</p>
                             </div>
                         </div>
 
                         <div class="forecast-card">
-                            <h3>🧹 Neteja (€/mes)</h3>
+                            <h3 data-i18n="fc_cleaning_title">🧹 Neteja (€/mes)</h3>
                             <canvas id="cleaningChart"></canvas>
                             <div class="forecast-summary">
-                                <p><strong>Base ITB:</strong> 996€/mes (11,952€/any)</p>
-                                <p><strong>Promig anual:</strong> <span id="cleaningAvg">0</span>€/mes</p>
+                                <p><strong data-i18n="fc_base">Base ITB:</strong> 996€/mes (11,952€/any)</p>
+                                <p><strong data-i18n="fc_avg">Promig anual:</strong> <span id="cleaningAvg">0</span>€/mes</p>
                             </div>
                         </div>
                     </div>
@@ -1811,6 +1847,7 @@ section h2 {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
 // DADES GLOBALS
 let consumptionData = {
@@ -2057,8 +2094,10 @@ function updateDataDisplay() {
 
     const calcSection = document.getElementById('calculationsSection');
     const reportBtn   = document.getElementById('fullReportBtn');
+    const exportBtn   = document.getElementById('exportPdfBtn');
     if (calcSection) calcSection.style.display = anyData ? '' : 'none';
     if (reportBtn)   reportBtn.style.display   = anyData ? '' : 'none';
+    if (exportBtn)   exportBtn.style.display   = anyData ? '' : 'none';
 
     const dataSection = document.getElementById('dataDisplaySection');
     const clearBtn    = document.getElementById('clearAllBtn');
@@ -2815,6 +2854,161 @@ function getAverageReduction(type, data) {
     return totalReduction / data.length;
 }
 
+function exportPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const t = i18n[currentLang];
+    const pageW = 210, margin = 14, contentW = pageW - margin * 2;
+    let y = 20;
+
+    // ── helpers ───────────────────────────────────────────────
+    const lineH = 6;
+    function checkPage(needed = 10) {
+        if (y + needed > 275) { doc.addPage(); y = 20; }
+    }
+    function heading1(text) {
+        checkPage(12);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.setTextColor(27, 67, 50);
+        doc.text(text, margin, y);
+        y += 8;
+        doc.setDrawColor(216, 243, 220);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, pageW - margin, y);
+        y += 5;
+    }
+    function heading2(text) {
+        checkPage(10);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(45, 106, 79);
+        doc.text(text, margin, y);
+        y += 7;
+    }
+    function bodyText(text, indent = 0) {
+        checkPage(lineH);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(74, 74, 68);
+        const lines = doc.splitTextToSize(text, contentW - indent);
+        doc.text(lines, margin + indent, y);
+        y += lines.length * lineH;
+    }
+    function tableRow(cols, widths, isHeader = false) {
+        checkPage(lineH + 2);
+        const rowH = lineH + 2;
+        doc.setFillColor(isHeader ? 27 : 247, isHeader ? 67 : 246, isHeader ? 50 : 242);
+        doc.rect(margin, y - 4, contentW, rowH, 'F');
+        doc.setFont('helvetica', isHeader ? 'bold' : 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(isHeader ? 255 : 74, isHeader ? 255 : 74, isHeader ? 255 : 68);
+        let x = margin + 2;
+        cols.forEach((col, i) => {
+            doc.text(String(col), x, y);
+            x += widths[i];
+        });
+        y += rowH;
+    }
+    function spacer(h = 4) { y += h; }
+
+    // ── COVER ─────────────────────────────────────────────────
+    doc.setFillColor(27, 67, 50);
+    doc.rect(0, 0, 210, 40, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(255, 255, 255);
+    doc.text(t.title.replace(/📊 /,''), margin, 18);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text(t.subtitle, margin, 28);
+    doc.setFontSize(8);
+    doc.setTextColor(200, 230, 210);
+    doc.text(new Date().toLocaleDateString(), margin, 36);
+    y = 52;
+
+    // ── 1. DADES REGISTRADES ──────────────────────────────────
+    const typeConfig = [
+        { key: 'electricity',      label: t.dt_elec_title,     unit: 'kWh' },
+        { key: 'water',            label: t.dt_water_title,    unit: 'm³'  },
+        { key: 'officeSupplies',   label: t.dt_supplies_title, unit: 'kg'  },
+        { key: 'cleaningProducts', label: t.dt_cleaning_title, unit: '€'   }
+    ];
+    const colW = [30, 22, 80, 48];
+
+    heading1(t.data_title);
+    typeConfig.forEach(({ key, label, unit }) => {
+        const data = consumptionData[key];
+        if (!data || data.length === 0) return;
+        heading2(label);
+        tableRow([t.th_date, t.th_value, t.th_strategy, t.th_action], colW, true);
+        data.forEach(row => {
+            const strat = row.strategy || '-';
+            tableRow([row.date, `${row.consumption} ${unit}`, strat, ''], colW);
+        });
+        spacer(4);
+    });
+
+    // ── 2. CÀLCULS DISPONIBLES ───────────────────────────────
+    spacer(4);
+    heading1(t.calc_title);
+    const calcColW = [55, 40, 40, 45];
+    tableRow([t.th_resource, t.th_current, t.th_optimised, t.th_saving], calcColW, true);
+
+    typeConfig.forEach(({ key, label, unit }) => {
+        const data = consumptionData[key];
+        if (!data || data.length === 0) return;
+        const avg = data.reduce((a, b) => a + b.consumption, 0) / data.length;
+        const reduction = getAverageReduction(key, data);
+        const optimised = avg * (1 - reduction);
+        const price = prices[key] || 1;
+        const saving = ((avg - optimised) * price * 12).toFixed(2);
+        tableRow([
+            label.replace(/[⚡💧📎🧹] /,''),
+            `${avg.toFixed(2)} ${unit}/mes`,
+            `${optimised.toFixed(2)} ${unit}/mes`,
+            `${saving}€/any`
+        ], calcColW);
+    });
+
+    // ── 3. PLA D'ACCIONS 3 ANYS ──────────────────────────────
+    spacer(8);
+    heading1(t.actionplan_title);
+    bodyText(t.actionplan_intro);
+    spacer(4);
+
+    const yearLabels = [
+        { year: YEARS[0], reduction: '10%', label: `${YEARS[0]}` },
+        { year: YEARS[1], reduction: '20%', label: `${YEARS[1]}` },
+        { year: YEARS[2], reduction: '30%', label: `${YEARS[2]}` }
+    ];
+    const actionsByYear = [
+        [t.strat_elec_a1, t.strat_water_a1, t.strat_supplies_a1, t.strat_cleaning_a1],
+        [t.strat_elec_a2, t.strat_water_a2, t.strat_supplies_a2, t.strat_cleaning_a2],
+        [t.strat_elec_a3, t.strat_water_a3, t.strat_supplies_a3, t.strat_cleaning_a3]
+    ];
+
+    yearLabels.forEach(({ year, reduction, label }, i) => {
+        heading2(`📅 ${label} — ${reduction} ${t.th_potential}`);
+        actionsByYear[i].forEach(action => bodyText(`• ${action}`, 4));
+        spacer(3);
+    });
+
+    // ── FOOTER every page ────────────────────────────────────
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let p = 1; p <= totalPages; p++) {
+        doc.setPage(p);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7);
+        doc.setTextColor(160, 160, 150);
+        doc.text(`${p} / ${totalPages}`, pageW - margin, 290, { align: 'right' });
+        doc.text('ITB — Calculadora de Consum de Recursos', margin, 290);
+    }
+
+    doc.save(`informe-consum-${new Date().toISOString().slice(0,10)}.pdf`);
+    showToast('✅ PDF generat correctament!');
+}
+
 function generateFullReport() {
     let html = '<div style="max-height: 500px; overflow-y: auto;">';
     const elecData = consumptionData.electricity;
@@ -2902,6 +3096,205 @@ function showToast(msg, type = 'success') {
     window._toastTimer = setTimeout(() => {
         toast.classList.remove('toast-show');
     }, 2200);
+}
+
+// ── I18N ─────────────────────────────────────────────────────
+const i18n = {
+    ca: {
+        title:'📊 Calculadora de Consum de Recursos', subtitle:'Analitza, optimitza i implementa millores amb economia circular',
+        tab_calculator:'📈 Calculadora', tab_actionplan:'🎯 Pla 3 Anys', tab_strategies:'💡 Estratègies', tab_forecast:'🔮 Predicció',
+        add_data:'📥 Afegir dades de consum', type_label:'Tipus de consum:', type_placeholder:'-- Selecciona un tipus --',
+        type_electricity:'⚡ Electricitat (kWh)', type_water:'💧 Aigua (m³)', type_supplies:'📎 Consumibles d\'oficina (kg)', type_cleaning:'🧹 Productes de neteja (€/mes)',
+        type_supplies_short:'📎 Consumibles', type_cleaning_short:'🧹 Neteja',
+        strategy_label:'Estratègia aplicada:', strategy_none:'-- Cap estratègia --',
+        value_label:'Valor de consum:', value_placeholder:'Introduïx la quantitat', date_label:'Data:',
+        btn_add:'➕ Afegir dada', calc_title:'🧮 Càlculs disponibles', btn_next_year:'Pròxim any', btn_school_year:'Set-Juny',
+        btn_report:'📄 Generar informe complet', data_title:'📋 Dades registrades', btn_clear_all:'🗑️ Buidar totes les dades',
+        planning_year_label:'Any de planificació:', forecast_year_label:'Any:',
+        actionplan_title:'🎯 Pla d\'Accions a 3 Anys - Reducció 30%', actionplan_intro:'Pla detallat per reduir un 30% l\'impacte ambiental en 3 anys amb accions concretes i mesurables.',
+        strategies_title:'💡 Estratègies de Reducció de Consum', strategies_intro:'Aplicant tendències estacionals i optimitzacions, aquí tenim les millors estratègies per reduir el consum.',
+        summary_title:'📊 Resum Global de Potencial d\'Estalvi - Dades ITB 2024-2025',
+        th_resource:'Recurs', th_current:'Consum Actual', th_potential:'Potencial', th_optimised:'Optimitzat', th_saving:'Estalvi/any',
+        th_date:'Data', th_value:'Valor', th_strategy:'Estratègia', th_action:'Acció',
+        row_elec_name:'Electricitat (Import)', row_water_name:'Aigua', row_water_current:'110 m³/any (9.17 m³/mes)',
+        row_supplies_name:'Consumibles', row_supplies_current:'10 paquets A4/mes', row_supplies_opt:'5 paquets/mes',
+        row_cleaning_name:'Neteja (Productes + Serveis)', row_total:'TOTAL ANUAL ESTIMAT',
+        dt_elec_title:'⚡ Electricitat (kWh)', dt_water_title:'💧 Aigua (m³)', dt_supplies_title:'📎 Consumibles (kg)', dt_cleaning_title:'🧹 Neteja (€/mes)',
+        strat_elec_title:'⚡ Electricitat', strat_elec_saving:'Estalvi potencial: 20-30%',
+        strat_situation:'🌡️ Situació ITB:', strat_actions:'💡 Accions Immediates:', strat_impact:'💰 Impacte estimat:',
+        strat_elec_s1k:'Generació solar actual:', strat_elec_s1v:'1419.86 kWh (Gener 2025)',
+        strat_elec_s2k:'Import energia necessari:', strat_elec_s2v:'419.79 kWh (30% del total)',
+        strat_elec_s3k:'Autoconsum fotovoltaic:', strat_elec_s4k:'CO2 evitat:', strat_elec_s4v:'0.69 tones (Gener 2025)',
+        strat_elec_a1:'Canviar a LED totes les bombetes (estalvi 75-80%)', strat_elec_a2:'Instal·lar sensors de moviment als passadissos',
+        strat_elec_a3:'Fer manteniment mensual d\'aires acondicionats', strat_elec_a4:'Apagar equips en repòs - estalvi 10-15%',
+        strat_elec_a5:'Optimitzar ús de panells solars existents', strat_elec_impact:'De 419.79 kWh/mes → 293.85 kWh/mes (30% reducció)',
+        strat_water_title:'💧 Aigua', strat_water_saving:'Estalvi potencial: 25-40%', strat_water_situation:'🌊 Situació ITB:',
+        strat_water_s1k:'Consum anual:', strat_water_s2k:'Per càpita:', strat_water_s2v:'0.1 m³/persona (molt eficient)',
+        strat_water_s3k:'Cost total (2024):', strat_water_s4k:'Preu/m³:', strat_water_actions:'🚰 Accions Immediates:',
+        strat_water_a1:'Instal·lar grifos amb sensor (estalvi 30-40%)', strat_water_a2:'Revisar i reparar fuites setmanals',
+        strat_water_a3:'Instal·lar inodors de doble flux (4.5L vs 9L)', strat_water_a4:'Crear sistema de recollida d\'aigua de pluja',
+        strat_water_a5:'Monitorització contínua de consums', strat_water_impact:'De 110 m³/any → 66 m³/any (40% reducció)',
+        strat_supplies_title:'📎 Consumibles d\'Oficina', strat_supplies_saving:'Estalvi potencial: 35-50%', strat_supplies_situation:'📚 Situació ITB:',
+        strat_supplies_s1k:'Paper A4 80g actual:', strat_supplies_s1v:'10 paquets/mes (1000 fulls)',
+        strat_supplies_s2k:'Tòner HP 203X:', strat_supplies_s2v:'2 unitats/mes',
+        strat_supplies_s3k:'Proveïdors:', strat_supplies_s4k:'Potencial d\'optimització:', strat_supplies_s4v:'Alt (transició digital)',
+        strat_supplies_actions:'📄 Accions Immediates:',
+        strat_supplies_a1:'Implementar política "paperless" (estalvi 60%)', strat_supplies_a2:'Imprimir en doble cara per defecte (estalvi 50%)',
+        strat_supplies_a3:'Usar paper reciclat certificat', strat_supplies_a4:'Crear biblioteca de tòners reutilitzables',
+        strat_supplies_a5:'Reduir a 5 paquets/mes (50% reducció)', strat_supplies_impact:'De 10 paq/mes → 5 paq/mes (50% reducció)',
+        strat_cleaning_title:'🧹 Productes de Neteja', strat_cleaning_saving:'Estalvi potencial: 30-45%', strat_cleaning_situation:'🧼 Situació ITB (Dades Reals 2024):',
+        strat_cleaning_s1k:'Cost mensual total:', strat_cleaning_s1v:'996€ (factures 20/06 i 27/05)',
+        strat_cleaning_s2k:'Productes de neteja:', strat_cleaning_s3k:'Serveis (mà d\'obra):', strat_cleaning_s4k:'Cost anual estimat:', strat_cleaning_s5k:'Per càpita:',
+        strat_cleaning_actions:'🧽 Accions Immediates:',
+        strat_cleaning_a1:'Canviar a productes ecològics concentrats (-15% cost)', strat_cleaning_a2:'Usar draps de microfibra per reduir productes (-20%)',
+        strat_cleaning_a3:'Preparar solucions naturals: vinagre+aigua (-25%)', strat_cleaning_a4:'Implementar protocols de neteja eficient',
+        strat_cleaning_a5:'Formació del personal en dosificació correcta (-10%)', strat_cleaning_impact:'De 996€/mes → 647.40€/mes (35% reducció = 4,183.20€/any)',
+        planning_title:'📅 Pla Mensual d\'Estratègies', planning_intro:'Planifica quines estratègies implementaràs cada mes per a cada tipus de consum. Els impactes es reflectiran automàticament a les prediccions.',
+        planning_summary_title:'📊 Resum de l\'Impacte Planificat', btn_save_plan:'💾 Guardar Pla i Actualitzar Prediccions', btn_clear_plan:'🗑️ Esborrar Totes les Estratègies',
+        forecast_title:'🔮 Predicció Estacional de Consum - Basada en dades ITB', forecast_intro:'Predicció basada en consums reals del ITB i cicles estacionals. Les prediccions varien per any segons la implementació d\'estratègies.',
+        fc_elec_title:'⚡ Electricitat (kWh/mes)', fc_water_title:'💧 Aigua (m³/mes)', fc_supplies_title:'📎 Consumibles (paquets A4/mes)', fc_cleaning_title:'🧹 Neteja (€/mes)',
+        fc_base:'Base ITB:', fc_avg:'Promig anual:',
+        btn_export_pdf:'⬇️ Exportar PDF',
+    },
+    es: {
+        title:'📊 Calculadora de Consumo de Recursos', subtitle:'Analiza, optimiza e implementa mejoras con economía circular',
+        tab_calculator:'📈 Calculadora', tab_actionplan:'🎯 Plan 3 Años', tab_strategies:'💡 Estrategias', tab_forecast:'🔮 Predicción',
+        add_data:'📥 Añadir datos de consumo', type_label:'Tipo de consumo:', type_placeholder:'-- Selecciona un tipo --',
+        type_electricity:'⚡ Electricidad (kWh)', type_water:'💧 Agua (m³)', type_supplies:'📎 Consumibles de oficina (kg)', type_cleaning:'🧹 Productos de limpieza (€/mes)',
+        type_supplies_short:'📎 Consumibles', type_cleaning_short:'🧹 Limpieza',
+        strategy_label:'Estrategia aplicada:', strategy_none:'-- Sin estrategia --',
+        value_label:'Valor de consumo:', value_placeholder:'Introduce la cantidad', date_label:'Fecha:',
+        btn_add:'➕ Añadir dato', calc_title:'🧮 Cálculos disponibles', btn_next_year:'Próximo año', btn_school_year:'Sep-Jun',
+        btn_report:'📄 Generar informe completo', data_title:'📋 Datos registrados', btn_clear_all:'🗑️ Vaciar todos los datos',
+        planning_year_label:'Año de planificación:', forecast_year_label:'Año:',
+        actionplan_title:'🎯 Plan de Acciones a 3 Años - Reducción 30%', actionplan_intro:'Plan detallado para reducir un 30% el impacto ambiental en 3 años con acciones concretas y medibles.',
+        strategies_title:'💡 Estrategias de Reducción de Consumo', strategies_intro:'Aplicando tendencias estacionales y optimizaciones, estas son las mejores estrategias para reducir el consumo.',
+        summary_title:'📊 Resumen Global de Potencial de Ahorro - Datos ITB 2024-2025',
+        th_resource:'Recurso', th_current:'Consumo Actual', th_potential:'Potencial', th_optimised:'Optimizado', th_saving:'Ahorro/año',
+        th_date:'Fecha', th_value:'Valor', th_strategy:'Estrategia', th_action:'Acción',
+        row_elec_name:'Electricidad (Importación)', row_water_name:'Agua', row_water_current:'110 m³/año (9.17 m³/mes)',
+        row_supplies_name:'Consumibles', row_supplies_current:'10 paquetes A4/mes', row_supplies_opt:'5 paquetes/mes',
+        row_cleaning_name:'Limpieza (Productos + Servicios)', row_total:'TOTAL ANUAL ESTIMADO',
+        dt_elec_title:'⚡ Electricidad (kWh)', dt_water_title:'💧 Agua (m³)', dt_supplies_title:'📎 Consumibles (kg)', dt_cleaning_title:'🧹 Limpieza (€/mes)',
+        strat_elec_title:'⚡ Electricidad', strat_elec_saving:'Ahorro potencial: 20-30%',
+        strat_situation:'🌡️ Situación ITB:', strat_actions:'💡 Acciones Inmediatas:', strat_impact:'💰 Impacto estimado:',
+        strat_elec_s1k:'Generación solar actual:', strat_elec_s1v:'1419.86 kWh (Enero 2025)',
+        strat_elec_s2k:'Importación energía necesaria:', strat_elec_s2v:'419.79 kWh (30% del total)',
+        strat_elec_s3k:'Autoconsumo fotovoltaico:', strat_elec_s4k:'CO2 evitado:', strat_elec_s4v:'0.69 toneladas (Enero 2025)',
+        strat_elec_a1:'Cambiar a LED todas las bombillas (ahorro 75-80%)', strat_elec_a2:'Instalar sensores de movimiento en pasillos',
+        strat_elec_a3:'Realizar mantenimiento mensual de aires acondicionados', strat_elec_a4:'Apagar equipos en reposo - ahorro 10-15%',
+        strat_elec_a5:'Optimizar uso de paneles solares existentes', strat_elec_impact:'De 419.79 kWh/mes → 293.85 kWh/mes (30% reducción)',
+        strat_water_title:'💧 Agua', strat_water_saving:'Ahorro potencial: 25-40%', strat_water_situation:'🌊 Situación ITB:',
+        strat_water_s1k:'Consumo anual:', strat_water_s2k:'Per cápita:', strat_water_s2v:'0.1 m³/persona (muy eficiente)',
+        strat_water_s3k:'Coste total (2024):', strat_water_s4k:'Precio/m³:', strat_water_actions:'🚰 Acciones Inmediatas:',
+        strat_water_a1:'Instalar grifos con sensor (ahorro 30-40%)', strat_water_a2:'Revisar y reparar fugas semanalmente',
+        strat_water_a3:'Instalar inodoros de doble descarga (4.5L vs 9L)', strat_water_a4:'Crear sistema de recogida de agua de lluvia',
+        strat_water_a5:'Monitorización continua de consumos', strat_water_impact:'De 110 m³/año → 66 m³/año (40% reducción)',
+        strat_supplies_title:'📎 Consumibles de Oficina', strat_supplies_saving:'Ahorro potencial: 35-50%', strat_supplies_situation:'📚 Situación ITB:',
+        strat_supplies_s1k:'Papel A4 80g actual:', strat_supplies_s1v:'10 paquetes/mes (1000 hojas)',
+        strat_supplies_s2k:'Tóner HP 203X:', strat_supplies_s2v:'2 unidades/mes',
+        strat_supplies_s3k:'Proveedores:', strat_supplies_s4k:'Potencial de optimización:', strat_supplies_s4v:'Alto (transición digital)',
+        strat_supplies_actions:'📄 Acciones Inmediatas:',
+        strat_supplies_a1:'Implementar política "paperless" (ahorro 60%)', strat_supplies_a2:'Imprimir a doble cara por defecto (ahorro 50%)',
+        strat_supplies_a3:'Usar papel reciclado certificado', strat_supplies_a4:'Crear biblioteca de tóneres reutilizables',
+        strat_supplies_a5:'Reducir a 5 paquetes/mes (50% reducción)', strat_supplies_impact:'De 10 paq/mes → 5 paq/mes (50% reducción)',
+        strat_cleaning_title:'🧹 Productos de Limpieza', strat_cleaning_saving:'Ahorro potencial: 30-45%', strat_cleaning_situation:'🧼 Situación ITB (Datos Reales 2024):',
+        strat_cleaning_s1k:'Coste mensual total:', strat_cleaning_s1v:'996€ (facturas 20/06 y 27/05)',
+        strat_cleaning_s2k:'Productos de limpieza:', strat_cleaning_s3k:'Servicios (mano de obra):', strat_cleaning_s4k:'Coste anual estimado:', strat_cleaning_s5k:'Per cápita:',
+        strat_cleaning_actions:'🧽 Acciones Inmediatas:',
+        strat_cleaning_a1:'Cambiar a productos ecológicos concentrados (-15% coste)', strat_cleaning_a2:'Usar trapos de microfibra para reducir productos (-20%)',
+        strat_cleaning_a3:'Preparar soluciones naturales: vinagre+agua (-25%)', strat_cleaning_a4:'Implementar protocolos de limpieza eficiente',
+        strat_cleaning_a5:'Formación del personal en dosificación correcta (-10%)', strat_cleaning_impact:'De 996€/mes → 647.40€/mes (35% reducción = 4,183.20€/año)',
+        planning_title:'📅 Plan Mensual de Estrategias', planning_intro:'Planifica qué estrategias implementarás cada mes para cada tipo de consumo. Los impactos se reflejarán automáticamente en las predicciones.',
+        planning_summary_title:'📊 Resumen del Impacto Planificado', btn_save_plan:'💾 Guardar Plan y Actualizar Predicciones', btn_clear_plan:'🗑️ Borrar Todas las Estrategias',
+        forecast_title:'🔮 Predicción Estacional de Consumo - Basada en datos ITB', forecast_intro:'Predicción basada en consumos reales del ITB y ciclos estacionales. Las predicciones varían por año según la implementación de estrategias.',
+        fc_elec_title:'⚡ Electricidad (kWh/mes)', fc_water_title:'💧 Agua (m³/mes)', fc_supplies_title:'📎 Consumibles (paquetes A4/mes)', fc_cleaning_title:'🧹 Limpieza (€/mes)',
+        fc_base:'Base ITB:', fc_avg:'Promedio anual:',
+        btn_export_pdf:'⬇️ Exportar PDF',
+    },
+    en: {
+        title:'📊 Resource Consumption Calculator', subtitle:'Analyse, optimise and implement circular economy improvements',
+        tab_calculator:'📈 Calculator', tab_actionplan:'🎯 3-Year Plan', tab_strategies:'💡 Strategies', tab_forecast:'🔮 Forecast',
+        add_data:'📥 Add consumption data', type_label:'Consumption type:', type_placeholder:'-- Select a type --',
+        type_electricity:'⚡ Electricity (kWh)', type_water:'💧 Water (m³)', type_supplies:'📎 Office supplies (kg)', type_cleaning:'🧹 Cleaning products (€/month)',
+        type_supplies_short:'📎 Supplies', type_cleaning_short:'🧹 Cleaning',
+        strategy_label:'Applied strategy:', strategy_none:'-- No strategy --',
+        value_label:'Consumption value:', value_placeholder:'Enter the amount', date_label:'Date:',
+        btn_add:'➕ Add data', calc_title:'🧮 Available calculations', btn_next_year:'Next year', btn_school_year:'Sep-Jun',
+        btn_report:'📄 Generate full report', data_title:'📋 Recorded data', btn_clear_all:'🗑️ Clear all data',
+        planning_year_label:'Planning year:', forecast_year_label:'Year:',
+        actionplan_title:'🎯 3-Year Action Plan - 30% Reduction', actionplan_intro:'Detailed plan to reduce environmental impact by 30% over 3 years with concrete, measurable actions.',
+        strategies_title:'💡 Consumption Reduction Strategies', strategies_intro:'Applying seasonal trends and optimisations, here are the best strategies to reduce consumption.',
+        summary_title:'📊 Global Savings Potential Summary - ITB Data 2024-2025',
+        th_resource:'Resource', th_current:'Current Consumption', th_potential:'Potential', th_optimised:'Optimised', th_saving:'Saving/year',
+        th_date:'Date', th_value:'Value', th_strategy:'Strategy', th_action:'Action',
+        row_elec_name:'Electricity (Import)', row_water_name:'Water', row_water_current:'110 m³/year (9.17 m³/month)',
+        row_supplies_name:'Supplies', row_supplies_current:'10 A4 reams/month', row_supplies_opt:'5 reams/month',
+        row_cleaning_name:'Cleaning (Products + Services)', row_total:'ESTIMATED ANNUAL TOTAL',
+        dt_elec_title:'⚡ Electricity (kWh)', dt_water_title:'💧 Water (m³)', dt_supplies_title:'📎 Supplies (kg)', dt_cleaning_title:'🧹 Cleaning (€/month)',
+        strat_elec_title:'⚡ Electricity', strat_elec_saving:'Potential saving: 20-30%',
+        strat_situation:'🌡️ ITB Situation:', strat_actions:'💡 Immediate Actions:', strat_impact:'💰 Estimated impact:',
+        strat_elec_s1k:'Current solar generation:', strat_elec_s1v:'1419.86 kWh (January 2025)',
+        strat_elec_s2k:'Energy import needed:', strat_elec_s2v:'419.79 kWh (30% of total)',
+        strat_elec_s3k:'Photovoltaic self-consumption:', strat_elec_s4k:'CO2 avoided:', strat_elec_s4v:'0.69 tonnes (January 2025)',
+        strat_elec_a1:'Switch all bulbs to LED (75-80% saving)', strat_elec_a2:'Install motion sensors in corridors',
+        strat_elec_a3:'Monthly air conditioning maintenance', strat_elec_a4:'Turn off equipment on standby - 10-15% saving',
+        strat_elec_a5:'Optimise existing solar panel usage', strat_elec_impact:'From 419.79 kWh/month → 293.85 kWh/month (30% reduction)',
+        strat_water_title:'💧 Water', strat_water_saving:'Potential saving: 25-40%', strat_water_situation:'🌊 ITB Situation:',
+        strat_water_s1k:'Annual consumption:', strat_water_s2k:'Per capita:', strat_water_s2v:'0.1 m³/person (very efficient)',
+        strat_water_s3k:'Total cost (2024):', strat_water_s4k:'Price/m³:', strat_water_actions:'🚰 Immediate Actions:',
+        strat_water_a1:'Install sensor taps (30-40% saving)', strat_water_a2:'Weekly leak inspection and repair',
+        strat_water_a3:'Install dual-flush toilets (4.5L vs 9L)', strat_water_a4:'Create rainwater harvesting system',
+        strat_water_a5:'Continuous consumption monitoring', strat_water_impact:'From 110 m³/year → 66 m³/year (40% reduction)',
+        strat_supplies_title:'📎 Office Supplies', strat_supplies_saving:'Potential saving: 35-50%', strat_supplies_situation:'📚 ITB Situation:',
+        strat_supplies_s1k:'Current A4 80g paper:', strat_supplies_s1v:'10 reams/month (1000 sheets)',
+        strat_supplies_s2k:'HP 203X Toner:', strat_supplies_s2v:'2 units/month',
+        strat_supplies_s3k:'Suppliers:', strat_supplies_s4k:'Optimisation potential:', strat_supplies_s4v:'High (digital transition)',
+        strat_supplies_actions:'📄 Immediate Actions:',
+        strat_supplies_a1:'Implement paperless policy (60% saving)', strat_supplies_a2:'Default double-sided printing (50% saving)',
+        strat_supplies_a3:'Use certified recycled paper', strat_supplies_a4:'Create reusable toner library',
+        strat_supplies_a5:'Reduce to 5 reams/month (50% reduction)', strat_supplies_impact:'From 10 reams/month → 5 reams/month (50% reduction)',
+        strat_cleaning_title:'🧹 Cleaning Products', strat_cleaning_saving:'Potential saving: 30-45%', strat_cleaning_situation:'🧼 ITB Situation (Real Data 2024):',
+        strat_cleaning_s1k:'Total monthly cost:', strat_cleaning_s1v:'996€ (invoices 20/06 and 27/05)',
+        strat_cleaning_s2k:'Cleaning products:', strat_cleaning_s3k:'Services (labour):', strat_cleaning_s4k:'Estimated annual cost:', strat_cleaning_s5k:'Per capita:',
+        strat_cleaning_actions:'🧽 Immediate Actions:',
+        strat_cleaning_a1:'Switch to concentrated eco products (-15% cost)', strat_cleaning_a2:'Use microfibre cloths to reduce products (-20%)',
+        strat_cleaning_a3:'Prepare natural solutions: vinegar+water (-25%)', strat_cleaning_a4:'Implement efficient cleaning protocols',
+        strat_cleaning_a5:'Staff training on correct dosage (-10%)', strat_cleaning_impact:'From 996€/month → 647.40€/month (35% reduction = 4,183.20€/year)',
+        planning_title:'📅 Monthly Strategy Plan', planning_intro:'Plan which strategies you will implement each month for each consumption type. Impacts will be automatically reflected in forecasts.',
+        planning_summary_title:'📊 Planned Impact Summary', btn_save_plan:'💾 Save Plan & Update Forecasts', btn_clear_plan:'🗑️ Clear All Strategies',
+        forecast_title:'🔮 Seasonal Consumption Forecast - Based on ITB Data', forecast_intro:'Forecast based on real ITB consumption and seasonal cycles. Predictions vary by year depending on strategy implementation.',
+        fc_elec_title:'⚡ Electricity (kWh/month)', fc_water_title:'💧 Water (m³/month)', fc_supplies_title:'📎 Supplies (A4 reams/month)', fc_cleaning_title:'🧹 Cleaning (€/month)',
+        fc_base:'ITB Base:', fc_avg:'Annual average:',
+        btn_export_pdf:'⬇️ Export PDF',
+    }
+};
+
+let currentLang = 'ca';
+
+function setLang(lang) {
+    currentLang = lang;
+    const t = i18n[lang];
+
+    // Update all data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.textContent = t[key];
+    });
+
+    // Update placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key] !== undefined) el.placeholder = t[key];
+    });
+
+    // Update active lang button
+    ['ca', 'es', 'en'].forEach(l => {
+        document.getElementById('btn-' + l).classList.toggle('active', l === lang);
+    });
+
+    // Re-render dynamic content that uses translated strings
+    updateStrategiesSelect();
 }
 
 window.onclick = function(event) {
