@@ -2,7 +2,7 @@
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Calculadora de Consum de Recursos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -994,34 +994,196 @@ section h2 {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── RESPONSIVE ─────────────────────────────────────────────── */
-@media (max-width: 1400px) { /* forecast stays 2x2 */ }
+/* ══════════════════════════════════════════════
+   RESPONSIVE — breakpoints: 1200 / 900 / 600 / 400
+   ══════════════════════════════════════════════ */
 
-@media (max-width: 900px) {
-    .planning-grid { grid-template-columns: repeat(2, 1fr); }
+/* ── Large tablets / small desktops ─────────── */
+@media (max-width: 1200px) {
+    .forecast-grid { gap: 18px !important; }
+    .planning-grid { gap: 10px; }
+    .planning-card { padding: 10px; }
+    .savings-grid { grid-template-columns: repeat(2, 1fr); }
+    .actionplan-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 768px) {
-    body { padding: 14px; }
-    header h1 { font-size: 1.9em; }
-    .tabs { gap: 8px; padding: 12px; }
-    .tab-btn { padding: 9px 14px; font-size: 0.88em; }
-    section { padding: 22px; }
+/* ── Tablets ─────────────────────────────────── */
+@media (max-width: 900px) {
+    body { padding: 16px 12px; }
+
+    header h1 { font-size: 2em; }
+    .subtitle { font-size: 0.92em; }
+
+    /* Tabs: wrap neatly */
+    .tabs {
+        gap: 6px;
+        padding: 10px;
+    }
+    .tab-btn {
+        padding: 9px 14px;
+        font-size: 0.87em;
+        flex: 1 1 auto;
+        text-align: center;
+    }
+
+    section { padding: 28px 20px; }
+
+    /* Grids → 2 cols */
+    .calculations-grid { grid-template-columns: repeat(2, 1fr); }
+    .data-tables       { grid-template-columns: repeat(2, 1fr); }
+    .planning-grid     { grid-template-columns: repeat(2, 1fr); }
+    .forecast-grid     { grid-template-columns: repeat(2, 1fr) !important; }
+    .actionplan-grid   { grid-template-columns: repeat(2, 1fr); }
+    .savings-grid      { grid-template-columns: repeat(2, 1fr); }
+
+    /* Controls row → wrap */
+    .forecast-controls,
+    .planning-controls {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Timeline */
+    .timeline::before  { left: 22px; }
+    .timeline-marker   { left: -10px; width: 52px; height: 52px; }
+    .timeline-item     { padding-left: 80px; }
+
+    /* Confirm dialog */
+    .confirm-box { padding: 22px 24px; }
+}
+
+/* ── Mobile ──────────────────────────────────── */
+@media (max-width: 600px) {
+    body { padding: 10px 8px; }
+
+    header { margin-bottom: 20px; }
+    header h1 { font-size: 1.5em; letter-spacing: -0.01em; }
+    .subtitle  { font-size: 0.85em; }
+
+    /* Tabs: 2×2 grid on mobile */
+    .tabs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        padding: 8px;
+    }
+    .tab-btn {
+        padding: 10px 8px;
+        font-size: 0.82em;
+        border-radius: 6px;
+    }
+
+    section { padding: 18px 14px; }
+    section h2 { font-size: 1.15em; margin-bottom: 18px; }
+
+    /* All grids → 1 col */
     .calculations-grid { grid-template-columns: 1fr; }
-    .data-tables { grid-template-columns: 1fr; }
-    .forecast-grid { grid-template-columns: 1fr !important; }
-    .planning-grid { grid-template-columns: 1fr; }
-    .strategy-header { flex-direction: column; align-items: flex-start; }
-    .modal-content { width: 95%; padding: 22px; }
-    .data-table th, .data-table td { padding: 8px; }
-    #planningSummary { grid-template-columns: 1fr; }
-    .month-row { flex-wrap: wrap; }
-    .timeline::before { left: 18px; }
-    .timeline-marker { left: -8px; width: 46px; height: 46px; }
-    .timeline-item { padding-left: 72px; }
-    .actionplan-grid { grid-template-columns: 1fr; }
-    .big-number { font-size: 2.2em; }
+    .data-tables       { grid-template-columns: 1fr; }
+    .planning-grid     { grid-template-columns: 1fr; }
+    .forecast-grid     { grid-template-columns: 1fr !important; gap: 14px !important; }
+    .actionplan-grid   { grid-template-columns: 1fr; }
+    .savings-grid      { grid-template-columns: 1fr; }
+    #planningSummary   { grid-template-columns: 1fr; }
+
+    /* Controls → column */
+    .forecast-controls,
+    .planning-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 12px;
+    }
+    .forecast-controls select,
+    .planning-controls select { min-width: unset; width: 100%; }
+
+    /* Forms */
+    .input-group { margin-bottom: 16px; }
+    .input-group input,
+    .input-group select { padding: 11px 12px; font-size: 0.95em; }
+
+    /* Buttons */
+    .btn { padding: 12px 18px; font-size: 0.93em; }
     .planning-buttons { flex-direction: column; gap: 8px; }
+    .planning-buttons .btn { margin-top: 10px; }
+
+    /* Calc cards */
+    .calc-card { padding: 18px; }
+
+    /* Data tables */
+    .data-table { padding: 14px; max-height: 320px; }
+    .data-table th,
+    .data-table td { padding: 7px 8px; font-size: 0.78em; }
+    .btn-delete { padding: 3px 7px; font-size: 0.72em; }
+
+    /* Strategy cards */
+    .strategy-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .strategy-content li { font-size: 0.9em; }
+
+    /* Forecast cards */
+    .forecast-card { padding: 14px; min-height: 260px; }
+    .forecast-card canvas { min-height: 180px; max-height: 200px; }
+    .forecast-summary { font-size: 0.75em; }
+
+    /* Planning cards */
+    .planning-card { padding: 12px; }
+    .planning-card h3 { font-size: 0.88em; }
+    .month-row { padding: 4px 6px; }
+    .month-row label { min-width: 42px; font-size: 0.7em; }
+    .month-row select { font-size: 0.68em; }
+    .reduction-info { font-size: 0.65em; min-width: 28px; }
+
+    /* Planning summary */
+    .planning-summary { padding: 20px 16px; }
+    .summary-item .value { font-size: 1.2em; }
+
+    /* Action plan */
+    .actionplan-summary-box,
+    .actionplan-savings-box { padding: 18px 14px; }
+    .actionplan-card-header { padding: 14px 16px; }
+    .actionplan-card-body   { padding: 14px 16px; }
+
+    /* Timeline */
+    .timeline::before  { left: 16px; }
+    .timeline-marker   { left: -6px; width: 40px; height: 40px; }
+    .timeline-year     { font-size: 0.82em; }
+    .timeline-reduction { font-size: 0.65em; padding: 2px 4px; }
+    .timeline-item     { padding-left: 58px; margin-bottom: 18px; }
+    .timeline-content  { padding: 12px 14px; }
+    .timeline-content h4 { font-size: 0.92em; }
+    .actions-list li   { font-size: 0.85em; padding-left: 20px; }
+
+    /* Big number */
+    .big-number { font-size: 2em; }
+    .total-savings-summary { padding: 18px 14px; }
+
+    /* Modal */
+    .modal-content { width: 96%; padding: 20px 16px; margin: 10% auto; }
+    #resultTitle   { font-size: 1.15em; }
+
+    /* Confirm */
+    .confirm-box { padding: 20px 16px; min-width: unset; width: 88vw; }
+    .confirm-title   { font-size: 1em; }
+    .confirm-buttons { flex-direction: column; gap: 8px; }
+    .confirm-cancel,
+    .confirm-ok { width: 100%; padding: 11px; }
+
+    /* Summary tables */
+    .summary-table th,
+    .summary-table td { padding: 10px 10px; font-size: 0.85em; }
+
+    /* Toast */
+    .toast { font-size: 0.88em; padding: 13px 20px; max-width: 88vw; white-space: normal; text-align: center; }
+}
+
+/* ── Very small phones ───────────────────────── */
+@media (max-width: 400px) {
+    header h1 { font-size: 1.25em; }
+    .tabs { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+    .tab-btn { font-size: 0.76em; padding: 8px 4px; }
+    section { padding: 14px 10px; }
+    .data-table th, .data-table td { font-size: 0.72em; padding: 5px 6px; }
+    .forecast-card canvas { min-height: 160px; max-height: 175px; }
+    .big-number { font-size: 1.7em; }
 }
 
 /* ── SCROLLBAR ──────────────────────────────────────────────── */
@@ -1471,9 +1633,6 @@ section h2 {
                     <div class="planning-controls">
                         <label for="planningYear">Any de planificació:</label>
                         <select id="planningYear" onchange="updatePlanningDisplay()">
-                            <option value="2026" selected>2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
                         </select>
                     </div>
 
@@ -1517,9 +1676,6 @@ section h2 {
                     <div class="forecast-controls">
                         <label for="forecastYear">Any:</label>
                         <select id="forecastYear" onchange="updateForecast()">
-                            <option value="2026" selected>2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
                         </select>
                     </div>
 
@@ -1649,13 +1805,31 @@ const seasonalFactors = {
     cleaningProducts: [1.05, 1.00, 1.05, 1.10, 1.10, 1.00, 0.90, 0.95, 1.20, 1.15, 1.05, 1.00]
 };
 
-const yearGrowthFactors = {
-    2026: 1.00,
-    2027: 0.95,
-    2028: 0.90
-};
+const CURRENT_YEAR = new Date().getFullYear();
+const YEARS = [CURRENT_YEAR, CURRENT_YEAR + 1, CURRENT_YEAR + 2];
 
-// ESTRATÈGIES
+const yearGrowthFactors = {};
+YEARS.forEach((y, i) => { yearGrowthFactors[y] = parseFloat((1.00 - i * 0.05).toFixed(2)); });
+
+let monthlyStrategies = {};
+YEARS.forEach(y => {
+    monthlyStrategies[y] = { electricity: {}, water: {}, officeSupplies: {}, cleaningProducts: {} };
+});
+
+function initYearSelectors() {
+    ['planningYear', 'forecastYear'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sel.innerHTML = '';
+        YEARS.forEach((y, i) => {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y;
+            if (i === 0) opt.selected = true;
+            sel.appendChild(opt);
+        });
+    });
+}
 const strategies = {
     electricity: [
         { id: 'elec-led', name: '🔦 LED Lighting', reduction: 0.10, description: 'Canviar a LED totes les bombetes', fullDescription: '<h3>LED Lighting</h3><p>Substituir bombetes incandescents per LED genera estalvi del 75-80%. Els LED consumeixen 80% menys energia i duren 25 vegades més.</p>' },
@@ -1690,16 +1864,11 @@ const prices = {
     cleaningProducts: 1
 };
 
-let monthlyStrategies = {
-    2026: { electricity: {}, water: {}, officeSupplies: {}, cleaningProducts: {} },
-    2027: { electricity: {}, water: {}, officeSupplies: {}, cleaningProducts: {} },
-    2028: { electricity: {}, water: {}, officeSupplies: {}, cleaningProducts: {} }
-};
-
 const months = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
 
 // INICIALITZACIÓ
 document.addEventListener('DOMContentLoaded', function() {
+    initYearSelectors();
     loadFromLocalStorage();
     document.getElementById('consumptionDate').valueAsDate = new Date();
     updateDataDisplay();
@@ -2017,12 +2186,13 @@ function loadMonthlyStrategies() {
 
 // PREDICCIÓ
 function getYearForecastDescription(year) {
-    const descriptions = {
-        2026: '📊 Predicció 2026 (Any base - sense canvis)',
-        2027: '📊 Predicció 2027 (Amb implementació inicial -5%)',
-        2028: '📊 Predicció 2028 (Amb estratègies consolidades -10%)'
-    };
-    return descriptions[year] || descriptions[2026];
+    const idx = YEARS.indexOf(parseInt(year));
+    const descs = [
+        `📊 Predicció ${YEARS[0]} (Any base - sense canvis)`,
+        `📊 Predicció ${YEARS[1]} (Amb implementació inicial -5%)`,
+        `📊 Predicció ${YEARS[2]} (Amb estratègies consolidades -10%)`
+    ];
+    return descs[idx] || descs[0];
 }
 
 function getMonthlyStrategyReduction(type, monthIndex, year) {
@@ -2047,14 +2217,15 @@ function generateElectricityForecast(year) {
     const growthFactor = yearGrowthFactors[year] || 1.00;
     const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
 
-    const data = seasonalFactors.electricity.map((factor, index) => {
+    const dataBase = seasonalFactors.electricity.map(factor =>
+        Math.round(baseConsumption * factor * growthFactor * 100) / 100
+    );
+    const dataWithStrategies = seasonalFactors.electricity.map((factor, index) => {
         const monthlyReduction = getMonthlyStrategyReduction('electricity', index, year);
-        const baseValue = baseConsumption * factor * growthFactor;
-        const reducedValue = baseValue * (1 - monthlyReduction);
-        return Math.round(reducedValue * 100) / 100;
+        return Math.round(baseConsumption * factor * growthFactor * (1 - monthlyReduction) * 100) / 100;
     });
 
-    const avgConsumption = Math.round(data.reduce((a, b) => a + b) / data.length * 100) / 100;
+    const avgConsumption = Math.round(dataWithStrategies.reduce((a, b) => a + b) / dataWithStrategies.length * 100) / 100;
     document.getElementById('elecAvg').textContent = avgConsumption;
 
     const ctx = document.getElementById('electricityChart').getContext('2d');
@@ -2064,24 +2235,40 @@ function generateElectricityForecast(year) {
         type: 'line',
         data: {
             labels: months_labels,
-            datasets: [{
-                label: `Consum (kWh) - ${year}`,
-                data: data,
-                borderColor: '#f093fb',
-                backgroundColor: 'rgba(240, 147, 251, 0.1)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3,
-                pointRadius: 5,
-                pointBackgroundColor: '#f093fb',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2
-            }]
+            datasets: [
+                {
+                    label: `Sense estratègies`,
+                    data: dataBase,
+                    borderColor: '#b0bec5',
+                    backgroundColor: 'rgba(176,190,197,0.08)',
+                    fill: false,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    borderDash: [6, 4],
+                    pointRadius: 3,
+                    pointBackgroundColor: '#b0bec5',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1
+                },
+                {
+                    label: `Amb estratègies`,
+                    data: dataWithStrategies,
+                    borderColor: '#5c7a6b',
+                    backgroundColor: 'rgba(92,122,107,0.10)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#5c7a6b',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: true } },
+            plugins: { legend: { display: true, labels: { boxWidth: 14, font: { size: 11 } } } },
             scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + ' kWh'; } } } }
         }
     });
@@ -2092,14 +2279,15 @@ function generateWaterForecast(year) {
     const growthFactor = yearGrowthFactors[year] || 1.00;
     const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
 
-    const data = seasonalFactors.water.map((factor, index) => {
+    const dataBase = seasonalFactors.water.map(factor =>
+        Math.round(baseConsumption * factor * growthFactor * 100) / 100
+    );
+    const dataWithStrategies = seasonalFactors.water.map((factor, index) => {
         const monthlyReduction = getMonthlyStrategyReduction('water', index, year);
-        const baseValue = baseConsumption * factor * growthFactor;
-        const reducedValue = baseValue * (1 - monthlyReduction);
-        return Math.round(reducedValue * 100) / 100;
+        return Math.round(baseConsumption * factor * growthFactor * (1 - monthlyReduction) * 100) / 100;
     });
 
-    const avgConsumption = Math.round(data.reduce((a, b) => a + b) / data.length * 100) / 100;
+    const avgConsumption = Math.round(dataWithStrategies.reduce((a, b) => a + b) / dataWithStrategies.length * 100) / 100;
     document.getElementById('waterAvg').textContent = avgConsumption;
 
     const ctx = document.getElementById('waterChart').getContext('2d');
@@ -2109,24 +2297,40 @@ function generateWaterForecast(year) {
         type: 'line',
         data: {
             labels: months_labels,
-            datasets: [{
-                label: `Consum (m³) - ${year}`,
-                data: data,
-                borderColor: '#4facfe',
-                backgroundColor: 'rgba(79, 172, 254, 0.1)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3,
-                pointRadius: 5,
-                pointBackgroundColor: '#4facfe',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2
-            }]
+            datasets: [
+                {
+                    label: `Sense estratègies`,
+                    data: dataBase,
+                    borderColor: '#b0bec5',
+                    backgroundColor: 'rgba(176,190,197,0.08)',
+                    fill: false,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    borderDash: [6, 4],
+                    pointRadius: 3,
+                    pointBackgroundColor: '#b0bec5',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1
+                },
+                {
+                    label: `Amb estratègies`,
+                    data: dataWithStrategies,
+                    borderColor: '#4a6d82',
+                    backgroundColor: 'rgba(74,109,130,0.10)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#4a6d82',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: true } },
+            plugins: { legend: { display: true, labels: { boxWidth: 14, font: { size: 11 } } } },
             scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + ' m³'; } } } }
         }
     });
@@ -2137,14 +2341,15 @@ function generateSuppliesForecast(year) {
     const growthFactor = yearGrowthFactors[year] || 1.00;
     const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
 
-    const data = seasonalFactors.officeSupplies.map((factor, index) => {
+    const dataBase = seasonalFactors.officeSupplies.map(factor =>
+        Math.round(baseConsumption * factor * growthFactor * 10) / 10
+    );
+    const dataWithStrategies = seasonalFactors.officeSupplies.map((factor, index) => {
         const monthlyReduction = getMonthlyStrategyReduction('officeSupplies', index, year);
-        const baseValue = baseConsumption * factor * growthFactor;
-        const reducedValue = baseValue * (1 - monthlyReduction);
-        return Math.round(reducedValue * 10) / 10;
+        return Math.round(baseConsumption * factor * growthFactor * (1 - monthlyReduction) * 10) / 10;
     });
 
-    const avgConsumption = Math.round(data.reduce((a, b) => a + b) / data.length * 10) / 10;
+    const avgConsumption = Math.round(dataWithStrategies.reduce((a, b) => a + b) / dataWithStrategies.length * 10) / 10;
     document.getElementById('suppliesAvg').textContent = avgConsumption;
 
     const ctx = document.getElementById('suppliesChart').getContext('2d');
@@ -2154,18 +2359,27 @@ function generateSuppliesForecast(year) {
         type: 'bar',
         data: {
             labels: months_labels,
-            datasets: [{
-                label: `Consum (paquets) - ${year}`,
-                data: data,
-                backgroundColor: ['#fa709a', '#fa709a', '#fa709a', '#fa709a', '#fa709a', '#fee140', '#fee140', '#fee140', '#fa709a', '#fa709a', '#fa709a', '#fa709a'],
-                borderColor: '#fa709a',
-                borderWidth: 2
-            }]
+            datasets: [
+                {
+                    label: `Sense estratègies`,
+                    data: dataBase,
+                    backgroundColor: 'rgba(176,190,197,0.4)',
+                    borderColor: '#b0bec5',
+                    borderWidth: 1.5
+                },
+                {
+                    label: `Amb estratègies`,
+                    data: dataWithStrategies,
+                    backgroundColor: 'rgba(122,107,58,0.55)',
+                    borderColor: '#7a6b3a',
+                    borderWidth: 1.5
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: true } },
+            plugins: { legend: { display: true, labels: { boxWidth: 14, font: { size: 11 } } } },
             scales: { y: { beginAtZero: true, ticks: { callback: function(value) { return value + ' paq'; } } } }
         }
     });
@@ -2176,14 +2390,15 @@ function generateCleaningForecast(year) {
     const growthFactor = yearGrowthFactors[year] || 1.00;
     const months_labels = ['Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'];
 
-    const data = seasonalFactors.cleaningProducts.map((factor, index) => {
+    const dataBase = seasonalFactors.cleaningProducts.map(factor =>
+        Math.round(baseConsumption * factor * growthFactor * 100) / 100
+    );
+    const dataWithStrategies = seasonalFactors.cleaningProducts.map((factor, index) => {
         const monthlyReduction = getMonthlyStrategyReduction('cleaningProducts', index, year);
-        const baseValue = baseConsumption * factor * growthFactor;
-        const reducedValue = baseValue * (1 - monthlyReduction);
-        return Math.round(reducedValue * 100) / 100;
+        return Math.round(baseConsumption * factor * growthFactor * (1 - monthlyReduction) * 100) / 100;
     });
 
-    const avgConsumption = Math.round(data.reduce((a, b) => a + b) / data.length * 100) / 100;
+    const avgConsumption = Math.round(dataWithStrategies.reduce((a, b) => a + b) / dataWithStrategies.length * 100) / 100;
     document.getElementById('cleaningAvg').textContent = avgConsumption;
 
     const ctx = document.getElementById('cleaningChart').getContext('2d');
@@ -2193,24 +2408,40 @@ function generateCleaningForecast(year) {
         type: 'line',
         data: {
             labels: months_labels,
-            datasets: [{
-                label: `Cost (€) - ${year}`,
-                data: data,
-                borderColor: '#30cfd0',
-                backgroundColor: 'rgba(48, 207, 208, 0.1)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3,
-                pointRadius: 5,
-                pointBackgroundColor: '#30cfd0',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2
-            }]
+            datasets: [
+                {
+                    label: `Sense estratègies`,
+                    data: dataBase,
+                    borderColor: '#b0bec5',
+                    backgroundColor: 'rgba(176,190,197,0.08)',
+                    fill: false,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    borderDash: [6, 4],
+                    pointRadius: 3,
+                    pointBackgroundColor: '#b0bec5',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 1
+                },
+                {
+                    label: `Amb estratègies`,
+                    data: dataWithStrategies,
+                    borderColor: '#5c5a7a',
+                    backgroundColor: 'rgba(92,90,122,0.10)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#5c5a7a',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: true } },
+            plugins: { legend: { display: true, labels: { boxWidth: 14, font: { size: 11 } } } },
             scales: { y: { beginAtZero: false, ticks: { callback: function(value) { return value + '€'; } } } }
         }
     });
@@ -2281,8 +2512,8 @@ function generateActionPlan() {
 
     const years = [
         {
-            year: 2026,
-            title: 'ANY 1: Planificació i Primeres Accions',
+            year: YEARS[0],
+            title: `ANY 1: Planificació i Primeres Accions`,
             reduction: 0.10,
             actions: [
                 '🔦 Canviar a LED (10% estalvi electricitat)',
@@ -2292,8 +2523,8 @@ function generateActionPlan() {
             ]
         },
         {
-            year: 2027,
-            title: 'ANY 2: Expansió de Mesures',
+            year: YEARS[1],
+            title: `ANY 2: Expansió de Mesures`,
             reduction: 0.20,
             actions: [
                 '🚨 Instal·lar sensors de moviment (8% estalvi electricitat)',
@@ -2303,8 +2534,8 @@ function generateActionPlan() {
             ]
         },
         {
-            year: 2028,
-            title: 'ANY 3: Consolidació i Objectius Finals',
+            year: YEARS[2],
+            title: `ANY 3: Consolidació i Objectius Finals`,
             reduction: 0.30,
             actions: [
                 '☀️ Optimitzar panells solars (12% estalvi electricitat)',
@@ -2358,15 +2589,15 @@ function generateActionPlan() {
                 <div class="savings-card">
                     <h4>${icons[type]} ${names[type]}</h4>
                     <div class="savings-item">
-                        <span class="year-label">2026:</span>
+                        <span class="year-label">${YEARS[0]}:</span>
                         <span class="savings-amount">${year1.toFixed(2)}€</span>
                     </div>
                     <div class="savings-item">
-                        <span class="year-label">2027:</span>
+                        <span class="year-label">${YEARS[1]}:</span>
                         <span class="savings-amount">${year2.toFixed(2)}€</span>
                     </div>
                     <div class="savings-item">
-                        <span class="year-label">2028:</span>
+                        <span class="year-label">${YEARS[2]}:</span>
                         <span class="savings-amount">${year3.toFixed(2)}€</span>
                     </div>
                     <div class="savings-item total">
