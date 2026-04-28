@@ -1468,7 +1468,6 @@ section h2 {
                         </div>
                     </div>
                     <button class="btn btn-success" id="fullReportBtn" onclick="generateFullReport()" data-i18n="btn_report">📄 Generar informe complet</button>
-                    <button class="btn btn-export" id="exportPdfBtn" onclick="exportPDF()" style="display:none;" data-i18n="btn_export_pdf">⬇️ Exportar PDF</button>
                 </section>
 
                 <section class="data-display-section" id="dataDisplaySection">
@@ -1538,6 +1537,7 @@ section h2 {
                     <p class="intro-text" data-i18n="actionplan_intro">Pla detallat per reduir un 30% l'impacte ambiental en 3 anys amb accions concretes i measurables.</p>
 
                     <div id="actionPlanContent"></div>
+                    <button class="btn btn-export" id="exportPdfBtn" onclick="exportPDF()" style="display:none;" data-i18n="btn_export_pdf">⬇️ Exportar PDF</button>
                 </section>
             </div>
 
@@ -2094,10 +2094,11 @@ function updateDataDisplay() {
 
     const calcSection = document.getElementById('calculationsSection');
     const reportBtn   = document.getElementById('fullReportBtn');
-    const exportBtn   = document.getElementById('exportPdfBtn');
     if (calcSection) calcSection.style.display = anyData ? '' : 'none';
     if (reportBtn)   reportBtn.style.display   = anyData ? '' : 'none';
-    if (exportBtn)   exportBtn.style.display   = anyData ? '' : 'none';
+
+    const exportBtn = document.getElementById('exportPdfBtn');
+    if (exportBtn) exportBtn.style.display = anyData ? '' : 'none';
 
     const dataSection = document.getElementById('dataDisplaySection');
     const clearBtn    = document.getElementById('clearAllBtn');
@@ -2854,10 +2855,48 @@ function getAverageReduction(type, data) {
     return totalReduction / data.length;
 }
 
+function normalizeForPDF(str) {
+    if (typeof str !== 'string') return String(str || '');
+    // Map accented chars to ASCII
+    const map = {
+        'à':'a','á':'a','â':'a','ã':'a','ä':'a','å':'a',
+        'À':'A','Á':'A','Â':'A','Ã':'A','Ä':'A','Å':'A',
+        'è':'e','é':'e','ê':'e','ë':'e',
+        'È':'E','É':'E','Ê':'E','Ë':'E',
+        'ì':'i','í':'i','î':'i','ï':'i',
+        'Ì':'I','Í':'I','Î':'I','Ï':'I',
+        'ò':'o','ó':'o','ô':'o','õ':'o','ö':'o',
+        'Ò':'O','Ó':'O','Ô':'O','Õ':'O','Ö':'O',
+        'ù':'u','ú':'u','û':'u','ü':'u',
+        'Ù':'U','Ú':'U','Û':'U','Ü':'U',
+        'ñ':'n','Ñ':'N',
+        'ç':'c','Ç':'C',
+        'ý':'y','ÿ':'y','Ý':'Y',
+        '€':'EUR','£':'GBP','¥':'JPY',
+        '→':'->','←':'<-','↑':'^','↓':'v',
+        '·':'.','•':'-','–':'-','—':'-',
+        '\u2018':"'",'\'':'\u0027','\u2019':"'",
+        '\u201C':'"','\u201D':'"',
+        '\u00B7':'.','\u00B0':'deg',
+        '\u00BA':'o','\u00AA':'a',
+        '\u00BF':'?','\u00A1':'!',
+        '\u00AB':'"','\u00BB':'"',
+    };
+    // Replace mapped chars
+    let result = str.split('').map(c => map[c] !== undefined ? map[c] : c).join('');
+    // Remove all remaining non-ASCII (emojis, specials)
+    result = result.replace(/[^\x09\x0A\x0D\x20-\x7E]/g, '');
+    return result.trim();
+}
+
 function exportPDF() {
+    if (!window.jspdf) { showToast('jsPDF no disponible', 'error'); return; }
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', putOnlyUsedFonts: true });
+    // Force standard helvetica — no unicode needed since we normalize all text
+    doc.setFont('helvetica', 'normal');
     const t = i18n[currentLang];
+    const n = (s) => normalizeForPDF(String(s || ''));
     const pageW = 210, margin = 14, contentW = pageW - margin * 2;
     let y = 20;
 
@@ -2867,23 +2906,25 @@ function exportPDF() {
         if (y + needed > 275) { doc.addPage(); y = 20; }
     }
     function heading1(text) {
-        checkPage(12);
+        checkPage(14);
+        doc.setFillColor(241, 238, 232);
+        doc.rect(margin - 2, y - 6, contentW + 4, 10, 'F');
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(16);
+        doc.setFontSize(13);
         doc.setTextColor(27, 67, 50);
-        doc.text(text, margin, y);
+        doc.text(n(text), margin, y);
         y += 8;
-        doc.setDrawColor(216, 243, 220);
-        doc.setLineWidth(0.5);
-        doc.line(margin, y, pageW - margin, y);
-        y += 5;
+        doc.setDrawColor(45, 106, 79);
+        doc.setLineWidth(0.4);
+        doc.line(margin, y - 2, pageW - margin, y - 2);
+        y += 4;
     }
     function heading2(text) {
         checkPage(10);
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.setTextColor(45, 106, 79);
-        doc.text(text, margin, y);
+        doc.text(n(text), margin, y);
         y += 7;
     }
     function bodyText(text, indent = 0) {
@@ -2891,21 +2932,25 @@ function exportPDF() {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9);
         doc.setTextColor(74, 74, 68);
-        const lines = doc.splitTextToSize(text, contentW - indent);
+        const lines = doc.splitTextToSize(n(text), contentW - indent);
         doc.text(lines, margin + indent, y);
         y += lines.length * lineH;
     }
     function tableRow(cols, widths, isHeader = false) {
-        checkPage(lineH + 2);
-        const rowH = lineH + 2;
-        doc.setFillColor(isHeader ? 27 : 247, isHeader ? 67 : 246, isHeader ? 50 : 242);
-        doc.rect(margin, y - 4, contentW, rowH, 'F');
+        checkPage(lineH + 3);
+        const rowH = lineH + 3;
+        if (isHeader) {
+            doc.setFillColor(27, 67, 50);
+        } else {
+            doc.setFillColor(247, 246, 242);
+        }
+        doc.rect(margin, y - 5, contentW, rowH, 'F');
         doc.setFont('helvetica', isHeader ? 'bold' : 'normal');
         doc.setFontSize(8);
         doc.setTextColor(isHeader ? 255 : 74, isHeader ? 255 : 74, isHeader ? 255 : 68);
         let x = margin + 2;
         cols.forEach((col, i) => {
-            doc.text(String(col), x, y);
+            doc.text(n(String(col)), x, y);
             x += widths[i];
         });
         y += rowH;
@@ -2914,47 +2959,50 @@ function exportPDF() {
 
     // ── COVER ─────────────────────────────────────────────────
     doc.setFillColor(27, 67, 50);
-    doc.rect(0, 0, 210, 40, 'F');
+    doc.rect(0, 0, 210, 45, 'F');
+    doc.setFillColor(45, 106, 79);
+    doc.rect(0, 45, 210, 3, 'F');
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(20);
+    doc.setFontSize(18);
     doc.setTextColor(255, 255, 255);
-    doc.text(t.title.replace(/📊 /,''), margin, 18);
+    doc.text('Calculadora de Consum de Recursos', margin, 20);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
-    doc.text(t.subtitle, margin, 28);
-    doc.setFontSize(8);
     doc.setTextColor(200, 230, 210);
-    doc.text(new Date().toLocaleDateString(), margin, 36);
-    y = 52;
+    doc.text(n(t.subtitle), margin, 30);
+    doc.setFontSize(8);
+    doc.text('ITB  |  ' + new Date().toLocaleDateString(), margin, 40);
+    y = 60;
 
     // ── 1. DADES REGISTRADES ──────────────────────────────────
     const typeConfig = [
-        { key: 'electricity',      label: t.dt_elec_title,     unit: 'kWh' },
-        { key: 'water',            label: t.dt_water_title,    unit: 'm³'  },
-        { key: 'officeSupplies',   label: t.dt_supplies_title, unit: 'kg'  },
-        { key: 'cleaningProducts', label: t.dt_cleaning_title, unit: '€'   }
+        { key: 'electricity',      label: 'Electricitat (kWh)', unit: 'kWh' },
+        { key: 'water',            label: 'Aigua (m3)',          unit: 'm3'  },
+        { key: 'officeSupplies',   label: 'Consumibles (kg)',    unit: 'kg'  },
+        { key: 'cleaningProducts', label: 'Neteja (EUR/mes)',    unit: 'EUR' }
     ];
-    const colW = [30, 22, 80, 48];
 
-    heading1(t.data_title);
-    typeConfig.forEach(({ key, label, unit }) => {
-        const data = consumptionData[key];
-        if (!data || data.length === 0) return;
-        heading2(label);
-        tableRow([t.th_date, t.th_value, t.th_strategy, t.th_action], colW, true);
-        data.forEach(row => {
-            const strat = row.strategy || '-';
-            tableRow([row.date, `${row.consumption} ${unit}`, strat, ''], colW);
+    const hasAnyData = typeConfig.some(({ key }) => consumptionData[key]?.length > 0);
+    if (hasAnyData) {
+        heading1(n(t.data_title));
+        typeConfig.forEach(({ key, label, unit }) => {
+            const data = consumptionData[key];
+            if (!data || data.length === 0) return;
+            heading2(label);
+            const colW = [32, 24, 80, 46];
+            tableRow([n(t.th_date), n(t.th_value), n(t.th_strategy), ''], colW, true);
+            data.forEach(row => {
+                tableRow([row.date, `${row.consumption} ${unit}`, n(row.strategy || '-'), ''], colW);
+            });
+            spacer(3);
         });
-        spacer(4);
-    });
+    }
 
-    // ── 2. CÀLCULS DISPONIBLES ───────────────────────────────
+    // ── 2. CALCULS DISPONIBLES ────────────────────────────────
     spacer(4);
-    heading1(t.calc_title);
-    const calcColW = [55, 40, 40, 45];
-    tableRow([t.th_resource, t.th_current, t.th_optimised, t.th_saving], calcColW, true);
-
+    heading1(n(t.calc_title));
+    const calcColW = [55, 42, 42, 43];
+    tableRow([n(t.th_resource), n(t.th_current), n(t.th_optimised), n(t.th_saving)], calcColW, true);
     typeConfig.forEach(({ key, label, unit }) => {
         const data = consumptionData[key];
         if (!data || data.length === 0) return;
@@ -2964,49 +3012,48 @@ function exportPDF() {
         const price = prices[key] || 1;
         const saving = ((avg - optimised) * price * 12).toFixed(2);
         tableRow([
-            label.replace(/[⚡💧📎🧹] /,''),
+            label,
             `${avg.toFixed(2)} ${unit}/mes`,
             `${optimised.toFixed(2)} ${unit}/mes`,
-            `${saving}€/any`
+            `${saving} EUR/any`
         ], calcColW);
     });
 
-    // ── 3. PLA D'ACCIONS 3 ANYS ──────────────────────────────
+    // ── 3. PLA D'ACCIONS 3 ANYS ───────────────────────────────
     spacer(8);
-    heading1(t.actionplan_title);
-    bodyText(t.actionplan_intro);
+    heading1('Pla d\'Accions a 3 Anys - Reduccio 30%');
+    bodyText(n(t.actionplan_intro));
     spacer(4);
 
-    const yearLabels = [
-        { year: YEARS[0], reduction: '10%', label: `${YEARS[0]}` },
-        { year: YEARS[1], reduction: '20%', label: `${YEARS[1]}` },
-        { year: YEARS[2], reduction: '30%', label: `${YEARS[2]}` }
-    ];
+    const reductions = ['10%', '20%', '30%'];
     const actionsByYear = [
-        [t.strat_elec_a1, t.strat_water_a1, t.strat_supplies_a1, t.strat_cleaning_a1],
-        [t.strat_elec_a2, t.strat_water_a2, t.strat_supplies_a2, t.strat_cleaning_a2],
-        [t.strat_elec_a3, t.strat_water_a3, t.strat_supplies_a3, t.strat_cleaning_a3]
+        [n(t.strat_elec_a1), n(t.strat_water_a1), n(t.strat_supplies_a1), n(t.strat_cleaning_a1)],
+        [n(t.strat_elec_a2), n(t.strat_water_a2), n(t.strat_supplies_a2), n(t.strat_cleaning_a2)],
+        [n(t.strat_elec_a3), n(t.strat_water_a3), n(t.strat_supplies_a3), n(t.strat_cleaning_a3)]
     ];
 
-    yearLabels.forEach(({ year, reduction, label }, i) => {
-        heading2(`📅 ${label} — ${reduction} ${t.th_potential}`);
-        actionsByYear[i].forEach(action => bodyText(`• ${action}`, 4));
+    YEARS.forEach((year, i) => {
+        heading2(`Any ${i + 1}: ${year}  (reduccio acumulada ${reductions[i]})`);
+        actionsByYear[i].forEach(action => bodyText('- ' + action, 4));
         spacer(3);
     });
 
-    // ── FOOTER every page ────────────────────────────────────
+    // ── FOOTER every page ─────────────────────────────────────
     const totalPages = doc.internal.getNumberOfPages();
     for (let p = 1; p <= totalPages; p++) {
         doc.setPage(p);
+        doc.setDrawColor(216, 243, 220);
+        doc.setLineWidth(0.3);
+        doc.line(margin, 285, pageW - margin, 285);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7);
         doc.setTextColor(160, 160, 150);
         doc.text(`${p} / ${totalPages}`, pageW - margin, 290, { align: 'right' });
-        doc.text('ITB — Calculadora de Consum de Recursos', margin, 290);
+        doc.text('ITB - Calculadora de Consum de Recursos', margin, 290);
     }
 
     doc.save(`informe-consum-${new Date().toISOString().slice(0,10)}.pdf`);
-    showToast('✅ PDF generat correctament!');
+    showToast('PDF generat correctament!');
 }
 
 function generateFullReport() {
